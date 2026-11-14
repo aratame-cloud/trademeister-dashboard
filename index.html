@@ -1,0 +1,1750 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trademeister サーバー版マーケットダッシュボード (リアル世界地図・DEX2対応)</title>
+    <!-- TradingView Advanced Chart Library (Loaded on-demand only when modal opens) -->
+    <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
+    <style>
+        :root {
+            --bg-color: #0f1013;
+            --surface-color: #17181e;
+            --nav-bg: #1c1d24;
+            --border-color: #272832;
+            --text-color: #f1f3f5;
+            --text-muted: #8b929a;
+            --accent-color: #10b981;
+            --up-color: #10b981;
+            --up-bg: rgba(16, 185, 129, 0.12);
+            --down-color: #f43f5e;
+            --down-bg: rgba(244, 63, 94, 0.12);
+            --card-bg: #16171d;
+            --card-hover: #1f2029;
+            --modal-bg: #161820;
+            --header-logo-size: 38px;
+            --footer-logo-size: 56px;
+        }
+
+        body.theme-light {
+            --bg-color: #f8fafc;
+            --surface-color: #ffffff;
+            --nav-bg: #ffffff;
+            --border-color: #e2e8f0;
+            --text-color: #0f172a;
+            --text-muted: #64748b;
+            --accent-color: #059669;
+            --up-color: #059669;
+            --up-bg: rgba(5, 150, 105, 0.1);
+            --down-color: #e11d48;
+            --down-bg: rgba(225, 29, 72, 0.1);
+            --card-bg: #ffffff;
+            --card-hover: #f1f5f9;
+            --modal-bg: #ffffff;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: background-color 0.2s, color 0.2s;
+        }
+
+        /* Top Bar: Clocks & System Status */
+        .top-bar {
+            background-color: var(--surface-color);
+            border-bottom: 1px solid var(--border-color);
+            padding: 6px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 11.5px;
+            color: var(--text-muted);
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .market-clocks {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .clock-item strong {
+            color: var(--text-color);
+            margin-right: 4px;
+        }
+
+        .server-status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 11px;
+            padding: 2px 8px;
+            border-radius: 9999px;
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--up-color);
+            font-weight: 600;
+        }
+
+        .status-dot {
+            width: 7px;
+            height: 7px;
+            background-color: var(--up-color);
+            border-radius: 50%;
+            display: inline-block;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(0.9); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        .top-right-tools {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-tool {
+            background: none;
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            padding: 3px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 11px;
+            transition: background 0.15s;
+        }
+        .btn-tool:hover {
+            background-color: var(--card-hover);
+        }
+
+        /* Header & Navigation Bar */
+        header {
+            background-color: var(--nav-bg);
+            padding: 10px 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+            border-bottom: 1px solid var(--border-color);
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .header-logo img {
+            width: var(--header-logo-size);
+            height: var(--header-logo-size);
+            object-fit: contain;
+            border-radius: 6px;
+        }
+
+        .header-brand-name {
+            font-weight: 700;
+            font-size: 16px;
+            letter-spacing: -0.3px;
+        }
+
+        nav#tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            align-items: center;
+            flex: 1;
+        }
+
+        nav a {
+            color: var(--text-color);
+            text-decoration: none;
+            padding: 6px 11px;
+            border-radius: 6px;
+            font-size: 12.5px;
+            font-weight: 500;
+            transition: all 0.15s;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        nav a:hover {
+            background-color: var(--card-hover);
+            color: var(--accent-color);
+        }
+
+        nav a.active {
+            background-color: var(--accent-color);
+            color: #ffffff !important;
+            font-weight: 600;
+            box-shadow: 0 2px 6px rgba(16, 185, 129, 0.25);
+        }
+
+        .controls {
+            margin-left: auto;
+            display: flex;
+            gap: 5px;
+            flex-wrap: wrap;
+        }
+
+        .controls button {
+            background-color: var(--surface-color);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 11.5px;
+            font-weight: 500;
+            transition: all 0.15s;
+        }
+
+        .controls button.active-col {
+            border-color: var(--accent-color);
+            color: var(--accent-color);
+            font-weight: 600;
+        }
+
+        .controls button:hover {
+            background-color: var(--card-hover);
+        }
+
+        /* Container */
+        .container {
+            padding: 16px 20px;
+            max-width: 1750px;
+            margin: 0 auto;
+            flex: 1;
+            width: 100%;
+        }
+
+        .tab-meta-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 14px;
+            font-size: 12.5px;
+            color: var(--text-muted);
+            border-left: 3px solid var(--accent-color);
+            padding-left: 10px;
+        }
+
+        .sunday-badge {
+            background-color: #dc2626;
+            color: #fff;
+            padding: 2px 7px;
+            border-radius: 4px;
+            font-size: 10.5px;
+            font-weight: 700;
+            margin-left: 6px;
+        }
+
+        .dex-badge {
+            background-color: #8b5cf6;
+            color: #fff;
+            padding: 2px 7px;
+            border-radius: 4px;
+            font-size: 10.5px;
+            font-weight: 700;
+            margin-left: 6px;
+        }
+
+        .click-hint {
+            font-size: 11px;
+            color: var(--text-muted);
+            background: var(--surface-color);
+            padding: 3px 8px;
+            border-radius: 4px;
+            border: 1px solid var(--border-color);
+        }
+
+        /* Fast Canvas Grid Layout */
+        .market-grid {
+            display: grid;
+            gap: 12px;
+            grid-template-columns: repeat(4, 1fr);
+        }
+        .market-grid.cols-6 { grid-template-columns: repeat(6, 1fr); }
+        .market-grid.cols-8 { grid-template-columns: repeat(8, 1fr); }
+
+        @media (max-width: 1500px) {
+            .market-grid.cols-8 { grid-template-columns: repeat(6, 1fr); }
+        }
+        @media (max-width: 1100px) {
+            .market-grid, .market-grid.cols-6, .market-grid.cols-8 { grid-template-columns: repeat(4, 1fr); }
+        }
+        @media (max-width: 780px) {
+            .market-grid, .market-grid.cols-6, .market-grid.cols-8 { grid-template-columns: repeat(2, 1fr); }
+            header { flex-direction: column; align-items: stretch; }
+            nav#tabs { overflow-x: auto; padding-bottom: 4px; }
+            .controls { margin-left: 0; justify-content: flex-end; }
+        }
+        @media (max-width: 480px) {
+            .market-grid, .market-grid.cols-6, .market-grid.cols-8 { grid-template-columns: repeat(1, 1fr); }
+        }
+
+        /* Fast Market Card */
+        .market-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 10px 12px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 162px;
+            transition: transform 0.12s, border-color 0.15s, background-color 0.3s, box-shadow 0.15s;
+            position: relative;
+            user-select: none;
+            cursor: pointer;
+        }
+
+        .market-card:hover {
+            transform: translateY(-3px);
+            border-color: #3b82f6;
+            background-color: var(--card-hover);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.25);
+        }
+
+        .market-card:hover .expand-icon {
+            opacity: 1;
+        }
+
+        .expand-icon {
+            opacity: 0;
+            font-size: 11px;
+            color: #3b82f6;
+            transition: opacity 0.15s;
+            margin-left: 4px;
+        }
+
+        .market-card.flash-up {
+            background-color: var(--up-bg) !important;
+        }
+        .market-card.flash-down {
+            background-color: var(--down-bg) !important;
+        }
+
+        .card-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 6px;
+        }
+
+        .card-title-group {
+            overflow: hidden;
+        }
+
+        .card-name {
+            font-size: 12.5px;
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            color: var(--text-color);
+            display: flex;
+            align-items: center;
+        }
+
+        .card-symbol {
+            font-size: 9.5px;
+            color: var(--text-muted);
+            margin-top: 1px;
+        }
+
+        .sunday-tag {
+            background-color: rgba(220, 38, 38, 0.2);
+            color: #ef4444;
+            border: 1px solid rgba(220, 38, 38, 0.4);
+            font-size: 9px;
+            font-weight: 700;
+            padding: 1px 4px;
+            border-radius: 3px;
+            white-space: nowrap;
+        }
+
+        .dex-tag {
+            background-color: rgba(139, 92, 246, 0.2);
+            color: #a78bfa;
+            border: 1px solid rgba(139, 92, 246, 0.4);
+            font-size: 9px;
+            font-weight: 700;
+            padding: 1px 4px;
+            border-radius: 3px;
+            white-space: nowrap;
+        }
+
+        .card-body {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            margin: 2px 0;
+        }
+
+        .card-price {
+            font-size: 18px;
+            font-weight: 700;
+            font-family: -apple-system, "SF Pro Display", "Roboto", monospace;
+            letter-spacing: -0.5px;
+        }
+
+        .card-change-badge {
+            font-size: 10.5px;
+            font-weight: 600;
+            padding: 2px 5px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            gap: 2px;
+        }
+
+        .card-change-badge.up {
+            background-color: var(--up-bg);
+            color: var(--up-color);
+        }
+
+        .card-change-badge.down {
+            background-color: var(--down-bg);
+            color: var(--down-color);
+        }
+
+        /* Subtle Range Bar */
+        .card-range-layer {
+            margin: 4px 0 2px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            opacity: 0.65;
+            transition: opacity 0.15s;
+        }
+        .market-card:hover .card-range-layer {
+            opacity: 0.95;
+        }
+
+        .range-bar-track {
+            width: 100%;
+            height: 2.5px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 2px;
+            position: relative;
+            overflow: visible;
+        }
+        body.theme-light .range-bar-track {
+            background: rgba(0, 0, 0, 0.08);
+        }
+
+        .range-bar-thumb {
+            position: absolute;
+            top: -2.5px;
+            width: 7.5px;
+            height: 7.5px;
+            border-radius: 50%;
+            background-color: var(--text-color);
+            box-shadow: 0 0 4px rgba(0,0,0,0.5);
+            transform: translateX(-50%);
+            transition: left 0.3s ease-out;
+        }
+
+        .range-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 9px;
+            color: var(--text-muted);
+            line-height: 1;
+        }
+
+        .card-chart-area {
+            width: 100%;
+            height: 48px;
+            margin-top: auto;
+        }
+
+        .card-chart-area canvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        /* Modal Overlay & Dialog */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.2s ease-in-out;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .modal-dialog {
+            background-color: var(--modal-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            width: 90%;
+            max-width: 1250px;
+            height: 80vh;
+            max-height: 800px;
+            box-shadow: 0 16px 40px rgba(0,0,0,0.5);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            transform: scale(0.96);
+            transition: transform 0.2s ease-in-out;
+        }
+
+        .modal-overlay.active .modal-dialog {
+            transform: scale(1);
+        }
+
+        .modal-header {
+            padding: 14px 20px;
+            background-color: var(--surface-color);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .modal-title-area {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .modal-title-area h2 {
+            font-size: 17px;
+            font-weight: 700;
+        }
+
+        .modal-title-area .tv-badge {
+            font-size: 11px;
+            background: #2563eb;
+            color: #fff;
+            padding: 2px 7px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        .modal-close-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 24px;
+            cursor: pointer;
+            padding: 4px 8px;
+            line-height: 1;
+            border-radius: 6px;
+            transition: all 0.15s;
+        }
+
+        .modal-close-btn:hover {
+            color: var(--text-color);
+            background-color: var(--card-hover);
+        }
+
+        .modal-body {
+            flex: 1;
+            position: relative;
+            background-color: var(--card-bg);
+        }
+
+        #tv-chart-container {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* World Clock Tab View */
+        .world-clock-view {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .world-map-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 18px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+        }
+
+        .world-map-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .world-map-header h2 {
+            font-size: 16px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .world-map-container {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 2 / 1;
+            max-height: 560px;
+            background-color: #2b3e58; /* Daytime Vivid Ocean */
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            box-shadow: inset 0 0 25px rgba(0,0,0,0.4);
+        }
+        body.theme-light .world-map-container {
+            background-color: #60a5fa;
+        }
+
+        #world-map-canvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        /* Compact Analog Clock Markers (Size halved: 28px width) */
+        .city-marker {
+            position: absolute;
+            transform: translate(-50%, -50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            z-index: 10;
+            transition: transform 0.15s, z-index 0.1s;
+        }
+        .city-marker:hover {
+            transform: translate(-50%, -55%) scale(1.18);
+            z-index: 30;
+        }
+
+        /* Halved 28px Pure White Analog Clock */
+        .analog-clock-canvas {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.6), 0 0 0 1.5px rgba(255, 255, 255, 0.95);
+            background: #ffffff !important;
+        }
+
+        .city-info-tag {
+            background: rgba(15, 17, 23, 0.92);
+            backdrop-filter: blur(4px);
+            border: 1px solid var(--border-color);
+            padding: 2px 5px;
+            border-radius: 4px;
+            margin-top: 2px;
+            text-align: center;
+            white-space: nowrap;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.5);
+            pointer-events: none;
+        }
+        body.theme-light .city-info-tag {
+            background: rgba(255, 255, 255, 0.95);
+            border-color: #cbd5e1;
+        }
+
+        .city-name {
+            font-size: 9.5px;
+            font-weight: 700;
+            color: var(--text-color);
+            line-height: 1.1;
+        }
+
+        .city-digital-time {
+            font-size: 8.5px;
+            font-family: monospace;
+            color: var(--text-muted);
+            font-weight: 600;
+            line-height: 1.1;
+        }
+
+        .market-badge {
+            font-size: 7.5px;
+            font-weight: 700;
+            padding: 0.5px 3px;
+            border-radius: 2px;
+            display: inline-block;
+            margin-top: 1px;
+            line-height: 1;
+        }
+        .market-badge.open {
+            background: var(--up-bg);
+            color: var(--up-color);
+            border: 1px solid rgba(16, 185, 129, 0.4);
+        }
+        .market-badge.closed {
+            background: rgba(150, 150, 150, 0.15);
+            color: var(--text-muted);
+        }
+
+        /* Schedule Timeline */
+        .market-schedule-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+            gap: 10px;
+        }
+
+        .schedule-card {
+            background-color: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 10px 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .schedule-info h4 {
+            font-size: 12px;
+            margin-bottom: 2px;
+        }
+
+        .schedule-info span {
+            font-size: 10.5px;
+            color: var(--text-muted);
+        }
+
+        /* News Layout */
+        .news-grid {
+            display: grid;
+            gap: 16px;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        }
+
+        .news-card {
+            background-color: var(--surface-color);
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.15s, border-color 0.15s;
+        }
+
+        .news-card:hover {
+            transform: translateY(-3px);
+            border-color: var(--accent-color);
+        }
+
+        .news-thumb {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+            background-color: var(--card-hover);
+        }
+
+        .news-content {
+            padding: 14px;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+
+        .news-date {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+        }
+
+        .news-content h3 {
+            font-size: 14px;
+            line-height: 1.4;
+            margin-bottom: 8px;
+        }
+
+        .news-content a {
+            color: var(--text-color);
+            text-decoration: none;
+        }
+
+        .news-content a:hover {
+            color: var(--accent-color);
+        }
+
+        .news-excerpt {
+            font-size: 12px;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        .news-excerpt p {
+            margin: 0;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--nav-bg);
+            border-top: 1px solid var(--border-color);
+            padding: 24px 20px;
+            text-align: center;
+            margin-top: auto;
+        }
+
+        .footer-logo img {
+            width: var(--footer-logo-size);
+            height: var(--footer-logo-size);
+            object-fit: contain;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        footer p {
+            font-size: 12.5px;
+            color: var(--text-muted);
+        }
+    </style>
+</head>
+<body class="theme-dark">
+
+    <!-- Financial Clock & Status -->
+    <div class="top-bar">
+        <div class="market-clocks">
+            <span class="clock-item"><strong>東京 (JST):</strong> <span id="clock-tokyo">--:--:--</span></span>
+            <span class="clock-item"><strong>ロンドン:</strong> <span id="clock-london">--:--:--</span></span>
+            <span class="clock-item"><strong>ニューヨーク:</strong> <span id="clock-ny">--:--:--</span></span>
+        </div>
+        <div class="top-right-tools">
+            <div class="server-status-pill">
+                <span class="status-dot"></span>
+                <span>サーバー版 爆速配信中 (0.01秒描画)</span>
+            </div>
+            <button class="btn-tool" onclick="toggleTheme()" id="theme-btn">☀️ ライトモード</button>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header>
+        <a href="https://trademeister.org" target="_blank" class="header-logo">
+            <img src="http://trademeister.org/wp-content/uploads/2024/09/cropped-acab869fbf012b6278e4a10923f2193c.png" alt="Trademeister">
+            <span class="header-brand-name">Trademeister</span>
+        </a>
+        <nav id="tabs">
+            <a class="tab-link active" data-tab="24h">24時間 / 週末</a>
+            <a class="tab-link" data-tab="dex2">DEX2 ⚡</a>
+            <a class="tab-link" data-tab="kawase">為替レート</a>
+            <a class="tab-link" data-tab="crypto">仮想通貨</a>
+            <a class="tab-link" data-tab="asia">日本・アジア</a>
+            <a class="tab-link" data-tab="us_eu">米国・欧州</a>
+            <a class="tab-link" data-tab="commodity">商品</a>
+            <a class="tab-link" data-tab="all">主要一覧</a>
+            <a class="tab-link" data-tab="world_clock">世界時計 🗺️</a>
+            <a class="tab-link" data-tab="news">ニュース (WP)</a>
+        </nav>
+        
+        <div class="controls" id="layout-controls">
+            <button onclick="setColumns(4)" id="col-btn-4">4列</button>
+            <button onclick="setColumns(6)" id="col-btn-6" class="active-col">6列</button>
+            <button onclick="setColumns(8)" id="col-btn-8">8列</button>
+            <button onclick="toggleFullScreen()">全画面</button>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="tab-meta-bar" id="tab-meta">
+            <div>
+                <span>24時間稼働市場およびサンデー独自計算銘柄をリアルタイム集約中</span>
+                <span class="click-hint">💡 カードをクリックで詳細インタラクティブチャートがポップアップします</span>
+            </div>
+        </div>
+
+        <div id="main-content-area">
+            <div class="market-grid cols-6" id="grid">
+                <!-- Dynamic Canvas Cards injected here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Interactive TradingView Modal -->
+    <div class="modal-overlay" id="chart-modal" onclick="handleOverlayClick(event)">
+        <div class="modal-dialog">
+            <div class="modal-header">
+                <div class="modal-title-area">
+                    <h2 id="modal-title">銘柄詳細チャート</h2>
+                    <span class="tv-badge" id="modal-symbol">SYMBOL</span>
+                    <span id="modal-price" style="font-weight: 700; font-size: 16px;"></span>
+                    <span id="modal-change" class="card-change-badge"></span>
+                </div>
+                <button class="modal-close-btn" onclick="closeChartModal()" title="閉じる (Esc)">×</button>
+            </div>
+            <div class="modal-body">
+                <div id="tv-chart-container"></div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-logo">
+            <a href="https://trademeister.org" target="_blank">
+                <img src="http://trademeister.org/wp-content/uploads/2024/09/cropped-acab869fbf012b6278e4a10923f2193c.png" alt="Trademeister">
+            </a>
+        </div>
+        <p>&copy; 2026 Trademeister. All rights reserved. 広告なし・サーバー高速集約版</p>
+    </footer>
+
+    <script>
+        const tabDescriptions = {
+            "24h": "土日も動くサンデー銘柄（BTCリアルタイム相関モデル）および暗号資産・24時間CFD <span class='sunday-badge'>サンデー銘柄計算中</span>",
+            "dex2": "24時間365日取引可能なハイテク個別株・半導体ETF・DEXトークン化銘柄群 <span class='dex-badge'>DEX2 リアルタイム</span>",
+            "kawase": "主要為替レート（USD/JPY, EUR/JPY, GBP/JPY, AUD/JPY, NZD/JPY, MXN/JPY等）および米ドル指数(DXY)",
+            "crypto": "24時間365日取引される主要暗号資産 (BTC, ETH, SOL, XRP, DOGE等)",
+            "asia": "日本市場（日経平均・TOPIX・日経レバ）およびアジア・オセアニア主要株価指数",
+            "us_eu": "米国3大指数（NYダウ・S&P500・NASDAQ）、ラッセル、SOX半導体、欧州指数、米10年/2年国債、VIX",
+            "commodity": "金・銀・プラチナ・エネルギー（原油・天然ガス）・銅・コーン・小麦のコモディティ価格",
+            "all": "全カテゴリーの主要アセット一覧サマリー",
+            "world_clock": "世界主要金融センターのリアルタイム昼夜世界地図＆アナログ市場時計 🌍",
+            "news": "本体サイト (trademeister.org) の最新マーケット速報・投資ニュース"
+        };
+
+        // Financial Market Centers configuration (x: 0-100%, y: 0-100%)
+        // Precise non-overlapping coordinates for 8 global financial centers
+        const MARKET_CENTERS = [
+            { id: "sydney", name: "シドニー", zone: "Australia/Sydney", x: 88, y: 73, openH: 10, closeH: 16, market: "ASX" },
+            { id: "tokyo", name: "東京", zone: "Asia/Tokyo", x: 84.5, y: 38, openH: 9, closeH: 15, market: "TSE" },
+            { id: "hongkong", name: "香港", zone: "Asia/Hong_Kong", x: 79, y: 47, openH: 9.5, closeH: 16, market: "HKEX" },
+            { id: "zurich", name: "チューリッヒ", zone: "Europe/Zurich", x: 52.5, y: 40, openH: 9, closeH: 17.5, market: "SIX" },
+            { id: "frankfurt", name: "フランクフルト", zone: "Europe/Berlin", x: 54, y: 24, openH: 9, closeH: 17.5, market: "DAX" },
+            { id: "london", name: "ロンドン", zone: "Europe/London", x: 46.5, y: 31, openH: 8, closeH: 16.5, market: "LSE" },
+            { id: "newyork", name: "ニューヨーク", zone: "America/New_York", x: 27, y: 34, openH: 9.5, closeH: 16, market: "NYSE" },
+            { id: "sanfrancisco", name: "サンフランシスコ", zone: "America/Los_Angeles", x: 15.5, y: 37, openH: 6.5, closeH: 13, market: "US-West" }
+        ];
+
+        let currentTab = "24h";
+        let currentCols = 6;
+        let currentTheme = "dark";
+        let previousPrices = {};
+        let updateTimer = null;
+        let activeModalSymbol = null;
+        let currentMarketItems = {};
+        let worldClockAnimFrame = null;
+
+        function toggleTheme() {
+            currentTheme = (currentTheme === "dark") ? "light" : "dark";
+            document.body.className = "theme-" + currentTheme;
+            document.getElementById("theme-btn").textContent = (currentTheme === "dark") ? "☀️ ライトモード" : "🌙 ダークモード";
+            if (currentTab === 'world_clock') {
+                renderWorldClock();
+            } else {
+                fetchMarketData(true);
+            }
+            if (activeModalSymbol) {
+                openChartModal(currentMarketItems[activeModalSymbol]);
+            }
+        }
+
+        function setColumns(num) {
+            currentCols = num;
+            document.querySelectorAll('.controls button').forEach(b => b.classList.remove('active-col'));
+            const btn = document.getElementById('col-btn-' + num);
+            if (btn) btn.classList.add('active-col');
+
+            const grid = document.getElementById('grid');
+            if (grid && currentTab !== 'news' && currentTab !== 'world_clock') {
+                grid.className = 'market-grid cols-' + currentCols;
+            }
+        }
+
+        function toggleFullScreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen();
+            } else {
+                if (document.exitFullscreen) document.exitFullscreen();
+            }
+        }
+
+        // Fast HTML5 Canvas Sparkline Drawer (0.05ms)
+        function drawSparkline(canvas, history, isPositive) {
+            if (!canvas || !history || history.length < 2) return;
+            const ctx = canvas.getContext('2d');
+            const dpr = window.devicePixelRatio || 1;
+            const width = canvas.clientWidth;
+            const height = canvas.clientHeight;
+
+            if (canvas.width !== width * dpr || canvas.height !== height * dpr) {
+                canvas.width = width * dpr;
+                canvas.height = height * dpr;
+            }
+            ctx.resetTransform();
+            ctx.scale(dpr, dpr);
+            ctx.clearRect(0, 0, width, height);
+
+            const min = Math.min(...history);
+            const max = Math.max(...history);
+            const range = (max - min) || 1;
+
+            const lineColor = isPositive 
+                ? (currentTheme === 'dark' ? '#10b981' : '#059669') 
+                : (currentTheme === 'dark' ? '#f43f5e' : '#e11d48');
+            
+            const fillColor = isPositive
+                ? (currentTheme === 'dark' ? 'rgba(16, 185, 129, 0.15)' : 'rgba(5, 150, 105, 0.1)')
+                : (currentTheme === 'dark' ? 'rgba(244, 63, 94, 0.15)' : 'rgba(225, 29, 72, 0.1)');
+
+            ctx.beginPath();
+            const step = width / (history.length - 1);
+            
+            history.forEach((val, idx) => {
+                const x = idx * step;
+                const y = height - 3 - ((val - min) / range) * (height - 6);
+                if (idx === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            });
+
+            ctx.strokeStyle = lineColor;
+            ctx.lineWidth = 1.8;
+            ctx.lineJoin = 'round';
+            ctx.lineCap = 'round';
+            ctx.stroke();
+
+            ctx.lineTo(width, height);
+            ctx.lineTo(0, height);
+            ctx.closePath();
+            ctx.fillStyle = fillColor;
+            ctx.fill();
+        }
+
+        function formatNumber(num, decimals) {
+            return num.toLocaleString('en-US', {
+                minimumFractionDigits: decimals,
+                maximumFractionDigits: decimals
+            });
+        }
+
+        async function fetchMarketData(forceRedraw = false) {
+            if (currentTab === 'news' || currentTab === 'world_clock') return;
+            const contentArea = document.getElementById('main-content-area');
+
+            try {
+                const res = await fetch(`/api/market?tab=${currentTab}`);
+                if (!res.ok) throw new Error('HTTP ' + res.status);
+                const json = await res.json();
+                const items = json.data;
+
+                items.forEach(it => { currentMarketItems[it.symbol] = it; });
+
+                let grid = document.getElementById('grid');
+                if (!grid) {
+                    contentArea.innerHTML = `<div class="market-grid cols-${currentCols}" id="grid"></div>`;
+                    grid = document.getElementById('grid');
+                    forceRedraw = true;
+                }
+
+                const existingCards = grid.querySelectorAll('.market-card');
+                const needRebuild = forceRedraw || existingCards.length !== items.length;
+
+                if (needRebuild) {
+                    grid.className = 'market-grid cols-' + currentCols;
+                    grid.innerHTML = '';
+                    
+                    items.forEach((item) => {
+                        const card = document.createElement('div');
+                        card.className = 'market-card';
+                        card.id = `card-${item.symbol.replace(/[^a-zA-Z0-9]/g, '_')}`;
+
+                        card.addEventListener('click', () => openChartModal(item));
+
+                        const isUp = item.change >= 0;
+                        const changeSign = isUp ? '+' : '';
+                        const changeBadgeClass = isUp ? 'up' : 'down';
+                        let tagHtml = '';
+                        if (item.isSunday && item.category !== 'dex2') {
+                            tagHtml = '<span class="sunday-tag">SUNDAY</span>';
+                        } else if (item.category === 'dex2') {
+                            tagHtml = '<span class="dex-tag">DEX2</span>';
+                        }
+
+                        const rangeSpan = (item.high - item.low) || 1;
+                        const currentPosPct = Math.min(100, Math.max(0, ((item.price - item.low) / rangeSpan) * 100));
+
+                        card.innerHTML = `
+                            <div class="card-header">
+                                <div class="card-title-group">
+                                    <div class="card-name">
+                                        <span>${item.name}</span>
+                                        <span class="expand-icon" title="詳細チャート">🔍</span>
+                                    </div>
+                                    <div class="card-symbol">${item.symbol}</div>
+                                </div>
+                                ${tagHtml}
+                            </div>
+                            <div class="card-body">
+                                <div class="card-price" id="price-${card.id}">${formatNumber(item.price, item.decimals)} <small style="font-size:10.5px;font-weight:normal;color:var(--text-muted);">${item.unit}</small></div>
+                                <div class="card-change-badge ${changeBadgeClass}" id="change-${card.id}">
+                                    ${changeSign}${formatNumber(item.change, item.decimals)} (${changeSign}${item.change_pct}%)
+                                </div>
+                            </div>
+                            
+                            <!-- Subtle Layered Range Bar -->
+                            <div class="card-range-layer">
+                                <div class="range-bar-track">
+                                    <div class="range-bar-thumb" id="thumb-${card.id}" style="left: ${currentPosPct}%;"></div>
+                                </div>
+                                <div class="range-labels">
+                                    <span id="low-${card.id}">L: ${formatNumber(item.low, item.decimals)}</span>
+                                    <span id="high-${card.id}">H: ${formatNumber(item.high, item.decimals)}</span>
+                                </div>
+                            </div>
+
+                            <div class="card-chart-area">
+                                <canvas id="chart-${card.id}"></canvas>
+                            </div>
+                        `;
+
+                        grid.appendChild(card);
+                        const canvas = card.querySelector('canvas');
+                        drawSparkline(canvas, item.history, isUp);
+                        previousPrices[item.symbol] = item.price;
+                    });
+                } else {
+                    items.forEach(item => {
+                        const cardId = `card-${item.symbol.replace(/[^a-zA-Z0-9]/g, '_')}`;
+                        const card = document.getElementById(cardId);
+                        if (!card) return;
+
+                        const priceEl = document.getElementById(`price-${cardId}`);
+                        const changeEl = document.getElementById(`change-${cardId}`);
+                        const canvas = document.getElementById(`chart-${cardId}`);
+                        const thumbEl = document.getElementById(`thumb-${cardId}`);
+                        const lowEl = document.getElementById(`low-${cardId}`);
+                        const highEl = document.getElementById(`high-${cardId}`);
+
+                        const prev = previousPrices[item.symbol];
+                        if (prev !== undefined && prev !== item.price) {
+                            card.classList.remove('flash-up', 'flash-down');
+                            void card.offsetWidth;
+                            card.classList.add(item.price > prev ? 'flash-up' : 'flash-down');
+                            setTimeout(() => card.classList.remove('flash-up', 'flash-down'), 400);
+                        }
+                        previousPrices[item.symbol] = item.price;
+
+                        const isUp = item.change >= 0;
+                        const changeSign = isUp ? '+' : '';
+
+                        if (priceEl) {
+                            priceEl.innerHTML = `${formatNumber(item.price, item.decimals)} <small style="font-size:10.5px;font-weight:normal;color:var(--text-muted);">${item.unit}</small>`;
+                        }
+                        if (changeEl) {
+                            changeEl.className = `card-change-badge ${isUp ? 'up' : 'down'}`;
+                            changeEl.textContent = `${changeSign}${formatNumber(item.change, item.decimals)} (${changeSign}${item.change_pct}%)`;
+                        }
+                        if (thumbEl) {
+                            const rangeSpan = (item.high - item.low) || 1;
+                            const currentPosPct = Math.min(100, Math.max(0, ((item.price - item.low) / rangeSpan) * 100));
+                            thumbEl.style.left = `${currentPosPct}%`;
+                        }
+                        if (lowEl) lowEl.textContent = `L: ${formatNumber(item.low, item.decimals)}`;
+                        if (highEl) highEl.textContent = `H: ${formatNumber(item.high, item.decimals)}`;
+                        if (canvas) {
+                            drawSparkline(canvas, item.history, isUp);
+                        }
+
+                        if (activeModalSymbol === item.symbol) {
+                            updateModalHeader(item);
+                        }
+                    });
+                }
+
+            } catch (err) {
+                console.error("Market fetch error:", err);
+            }
+        }
+
+        // ==========================================
+        // World Clock & Day/Night Earth Map System
+        // ==========================================
+        function renderWorldClock() {
+            const contentArea = document.getElementById('main-content-area');
+            const controls = document.getElementById('layout-controls');
+            controls.style.display = 'none';
+
+            contentArea.innerHTML = `
+                <div class="world-clock-view">
+                    <div class="world-map-card">
+                        <div class="world-map-header">
+                            <h2>🌍 世界主要金融市場＆リアルタイム昼夜世界地図</h2>
+                            <span style="font-size:12px;color:var(--text-muted)">☀️ 明るいエリア: 昼間 (Day) ／ 🌙 影のエリア: 夜間 (Night)</span>
+                        </div>
+                        <div class="world-map-container" id="map-container">
+                            <canvas id="world-map-canvas"></canvas>
+                            <div id="city-markers-layer"></div>
+                        </div>
+                    </div>
+
+                    <div class="market-schedule-grid" id="market-schedules"></div>
+                </div>
+            `;
+
+            initWorldMap();
+            updateWorldClockLoop();
+        }
+
+        function initWorldMap() {
+            const markersLayer = document.getElementById('city-markers-layer');
+            markersLayer.innerHTML = '';
+
+            MARKET_CENTERS.forEach(city => {
+                const marker = document.createElement('div');
+                marker.className = 'city-marker';
+                marker.id = `marker-${city.id}`;
+                marker.style.left = `${city.x}%`;
+                marker.style.top = `${city.y}%`;
+
+                marker.innerHTML = `
+                    <canvas class="analog-clock-canvas" id="analog-${city.id}" width="80" height="80"></canvas>
+                    <div class="city-info-tag">
+                        <div class="city-name">${city.name}</div>
+                        <div class="city-digital-time" id="time-${city.id}">--:--</div>
+                        <div class="market-badge" id="badge-${city.id}">CHECKING</div>
+                    </div>
+                `;
+
+                marker.addEventListener('click', () => {
+                    if (city.id === 'tokyo') switchTab('asia');
+                    else if (city.id === 'newyork' || city.id === 'sanfrancisco') switchTab('us_eu');
+                    else if (city.id === 'london' || city.id === 'frankfurt' || city.id === 'zurich') switchTab('us_eu');
+                    else switchTab('24h');
+                });
+
+                markersLayer.appendChild(marker);
+            });
+
+            const scheduleGrid = document.getElementById('market-schedules');
+            scheduleGrid.innerHTML = '';
+            MARKET_CENTERS.forEach(city => {
+                const card = document.createElement('div');
+                card.className = 'schedule-card';
+                card.innerHTML = `
+                    <div class="schedule-info">
+                        <h4>${city.name} (${city.market})</h4>
+                        <span>現地取引時間: ${city.openH}:00 - ${city.closeH}:00</span>
+                    </div>
+                    <div class="market-badge" id="sched-badge-${city.id}">--</div>
+                `;
+                scheduleGrid.appendChild(card);
+            });
+        }
+
+        // Always White Background Analog Clock (Halved 28px rendering)
+        function drawAnalogClock(canvas, date) {
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            const w = canvas.width;
+            const h = canvas.height;
+            const r = w / 2;
+
+            ctx.clearRect(0, 0, w, h);
+            ctx.save();
+            ctx.translate(r, r);
+
+            // 1. Dial Face: Pure White
+            ctx.beginPath();
+            ctx.arc(0, 0, r - 2, 0, 2 * Math.PI);
+            ctx.fillStyle = '#ffffff';
+            ctx.fill();
+
+            // Bezel Outer Ring
+            ctx.lineWidth = 2.5;
+            ctx.strokeStyle = '#1e293b';
+            ctx.stroke();
+
+            // 2. Hour Ticks
+            ctx.lineCap = 'round';
+            for (let i = 0; i < 12; i++) {
+                const angle = (i * Math.PI) / 6;
+                ctx.beginPath();
+                ctx.lineWidth = (i % 3 === 0) ? 3 : 1.5;
+                ctx.strokeStyle = (i % 3 === 0) ? '#0f172a' : '#64748b';
+                ctx.moveTo(Math.cos(angle) * (r - 7), Math.sin(angle) * (r - 7));
+                ctx.lineTo(Math.cos(angle) * (r - 3), Math.sin(angle) * (r - 3));
+                ctx.stroke();
+            }
+
+            const hours = date.getHours() % 12;
+            const minutes = date.getMinutes();
+            const seconds = date.getSeconds() + date.getMilliseconds() / 1000;
+
+            // 3. Hour Hand
+            const hourAngle = (hours + minutes / 60) * (Math.PI / 6) - Math.PI / 2;
+            ctx.beginPath();
+            ctx.lineWidth = 4;
+            ctx.strokeStyle = '#0f172a';
+            ctx.moveTo(0, 0);
+            ctx.lineTo(Math.cos(hourAngle) * (r * 0.48), Math.sin(hourAngle) * (r * 0.48));
+            ctx.stroke();
+
+            // 4. Minute Hand
+            const minAngle = (minutes + seconds / 60) * (Math.PI / 30) - Math.PI / 2;
+            ctx.beginPath();
+            ctx.lineWidth = 2.8;
+            ctx.strokeStyle = '#1e293b';
+            ctx.moveTo(0, 0);
+            ctx.lineTo(Math.cos(minAngle) * (r * 0.72), Math.sin(minAngle) * (r * 0.72));
+            ctx.stroke();
+
+            // 5. Second Hand (Vibrant Red)
+            const secAngle = seconds * (Math.PI / 30) - Math.PI / 2;
+            ctx.beginPath();
+            ctx.lineWidth = 1.6;
+            ctx.strokeStyle = '#dc2626';
+            ctx.moveTo(0, 0);
+            ctx.lineTo(Math.cos(secAngle) * (r * 0.8), Math.sin(secAngle) * (r * 0.8));
+            ctx.stroke();
+
+            // 6. Center Hub
+            ctx.beginPath();
+            ctx.arc(0, 0, 3, 0, 2 * Math.PI);
+            ctx.fillStyle = '#dc2626';
+            ctx.fill();
+
+            ctx.restore();
+        }
+
+        // High-Detail World Map Drawing with Realistic Shorelines & Day/Night Solar Terminator
+        function drawDayNightWorldMap() {
+            const canvas = document.getElementById('world-map-canvas');
+            if (!canvas) return;
+            const container = document.getElementById('map-container');
+            const dpr = window.devicePixelRatio || 1;
+            const width = container.clientWidth;
+            const height = container.clientHeight;
+
+            if (canvas.width !== width * dpr || canvas.height !== height * dpr) {
+                canvas.width = width * dpr;
+                canvas.height = height * dpr;
+            }
+            const ctx = canvas.getContext('2d');
+            ctx.resetTransform();
+            ctx.scale(dpr, dpr);
+            ctx.clearRect(0, 0, width, height);
+
+            // 1. Bright Daylight Ocean Base
+            const oceanGradient = ctx.createLinearGradient(0, 0, 0, height);
+            if (currentTheme === 'dark') {
+                oceanGradient.addColorStop(0, '#263b57');
+                oceanGradient.addColorStop(0.5, '#385275');
+                oceanGradient.addColorStop(1, '#21324a');
+            } else {
+                oceanGradient.addColorStop(0, '#70b2fb');
+                oceanGradient.addColorStop(0.5, '#93c5fd');
+                oceanGradient.addColorStop(1, '#60a5fa');
+            }
+            ctx.fillStyle = oceanGradient;
+            ctx.fillRect(0, 0, width, height);
+
+            // 2. Graticule Lines (Latitude & Longitude)
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
+            ctx.lineWidth = 0.7;
+            for (let lon = 0; lon <= 360; lon += 30) {
+                const x = (lon / 360) * width;
+                ctx.beginPath();
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, height);
+                ctx.stroke();
+            }
+            for (let lat = 0; lat <= 180; lat += 30) {
+                const y = (lat / 180) * height;
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(width, y);
+                ctx.stroke();
+            }
+
+            // 3. High-Detail Continents
+            drawRealisticContinents(ctx, width, height);
+
+            // 4. Solar Terminator Calculation
+            const now = new Date();
+            const utcHours = now.getUTCHours() + now.getUTCMinutes() / 60 + now.getUTCSeconds() / 3600;
+            const sunLon = (12 - utcHours) * 15;
+            
+            const startOfYear = new Date(now.getFullYear(), 0, 0);
+            const dayOfYear = Math.floor((now - startOfYear) / (1000 * 60 * 60 * 24));
+            const sunDeclination = -23.44 * Math.cos((2 * Math.PI / 365) * (dayOfYear + 10)) * (Math.PI / 180);
+
+            // 5. Draw Night Shade Overlay
+            ctx.beginPath();
+            const numSteps = 120;
+            const nightPath = [];
+
+            for (let i = 0; i <= numSteps; i++) {
+                const x = (i / numSteps) * width;
+                const lon = (i / numSteps) * 360 - 180;
+                const deltaLon = (lon - sunLon) * (Math.PI / 180);
+                
+                const tanLat = -Math.cos(deltaLon) / Math.tan(sunDeclination || 0.001);
+                let lat = Math.atan(tanLat) * (180 / Math.PI);
+                lat = Math.max(-85, Math.min(85, lat));
+
+                const y = height * (0.5 - lat / 180);
+                nightPath.push({ x, y });
+                if (i === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            }
+
+            if (sunDeclination > 0) {
+                ctx.lineTo(width, height);
+                ctx.lineTo(0, height);
+            } else {
+                ctx.lineTo(width, 0);
+                ctx.lineTo(0, 0);
+            }
+            ctx.closePath();
+
+            const nightGradient = ctx.createLinearGradient(0, 0, 0, height);
+            nightGradient.addColorStop(0, 'rgba(6, 10, 25, 0.76)');
+            nightGradient.addColorStop(0.5, 'rgba(8, 14, 34, 0.72)');
+            nightGradient.addColorStop(1, 'rgba(5, 9, 22, 0.78)');
+            ctx.fillStyle = nightGradient;
+            ctx.fill();
+
+            // Golden Twilight Boundary Line
+            ctx.beginPath();
+            nightPath.forEach((pt, idx) => {
+                if (idx === 0) ctx.moveTo(pt.x, pt.y);
+                else ctx.lineTo(pt.x, pt.y);
+            });
+            ctx.strokeStyle = 'rgba(251, 191, 36, 0.65)';
+            ctx.lineWidth = 1.8;
+            ctx.stroke();
+
+            // Sun Light Center Glow
+            const sunX = ((sunLon + 180) % 360) / 360 * width;
+            const sunY = height * (0.5 - (sunDeclination * 180 / Math.PI) / 180);
+            const sunRadial = ctx.createRadialGradient(sunX, sunY, 0, sunX, sunY, 80);
+            sunRadial.addColorStop(0, 'rgba(254, 240, 138, 0.45)');
+            sunRadial.addColorStop(1, 'rgba(254, 240, 138, 0)');
+            ctx.fillStyle = sunRadial;
+            ctx.beginPath();
+            ctx.arc(sunX, sunY, 80, 0, 2 * Math.PI);
+            ctx.fill();
+        }
+
+        // Detailed realistic coastlines
+        function drawRealisticContinents(ctx, w, h) {
+            ctx.fillStyle = currentTheme === 'dark' ? '#3c5a42' : '#86efac';
+            ctx.strokeStyle = currentTheme === 'dark' ? 'rgba(255,255,255,0.22)' : 'rgba(0,0,0,0.18)';
+            ctx.lineWidth = 1.1;
+
+            function drawPath(coords) {
+                ctx.beginPath();
+                coords.forEach((pt, idx) => {
+                    const x = (pt[0] / 360) * w;
+                    const y = (pt[1] / 180) * h;
+                    if (idx === 0) ctx.moveTo(x, y);
+                    else ctx.lineTo(x, y);
+                });
+                ctx.closePath();
+                ctx.fill();
+                ctx.stroke();
+            }
+
+            // North America (High detail: Alaska, Canada, USA, Mexico, Florida, Baja)
+            drawPath([
+                [10, 20], [30, 18], [55, 18], [75, 22], [90, 28], [98, 38], [112, 35], [118, 48],
+                [108, 52], [96, 50], [92, 60], [96, 68], [92, 75], [84, 78], [80, 88], [72, 85],
+                [64, 75], [58, 62], [48, 54], [35, 52], [28, 42], [18, 35], [12, 28]
+            ]);
+
+            // Greenland
+            drawPath([[125, 12], [148, 12], [152, 28], [138, 32], [126, 25]]);
+
+            // South America (High detail: Andes, Brazil bulge, Patagonia)
+            drawPath([
+                [82, 88], [94, 85], [108, 92], [126, 95], [128, 108], [124, 122], [116, 138],
+                [108, 155], [102, 168], [98, 168], [94, 155], [94, 135], [88, 115], [84, 98]
+            ]);
+
+            // Europe & Asia / Eurasia (Complex detailed coastline)
+            drawPath([
+                [165, 36], [178, 32], [186, 22], [195, 20], [210, 20], [240, 22], [270, 20],
+                [300, 20], [325, 24], [345, 28], [350, 36], [335, 42], [322, 50], [315, 62],
+                [310, 75], [298, 85], [285, 88], [278, 75], [268, 72], [260, 62], [250, 74],
+                [242, 68], [235, 62], [225, 72], [218, 62], [205, 58], [195, 52], [185, 50],
+                [178, 55], [168, 54], [160, 48], [162, 40]
+            ]);
+
+            // Scandinavia
+            drawPath([[185, 20], [198, 18], [202, 32], [192, 38], [184, 30]]);
+
+            // Africa (detailed)
+            drawPath([
+                [165, 55], [192, 55], [215, 60], [232, 68], [230, 85], [222, 105], [215, 125],
+                [205, 148], [198, 152], [190, 142], [182, 122], [172, 105], [162, 85], [158, 68]
+            ]);
+
+            // Madagascar
+            drawPath([[228, 120], [235, 120], [232, 138], [226, 135]]);
+
+            // Australia (detailed)
+            drawPath([
+                [295, 115], [315, 110], [335, 115], [338, 130], [332, 148], [320, 152],
+                [305, 150], [295, 142], [292, 128]
+            ]);
+
+            // New Zealand
+            drawPath([[348, 145], [354, 145], [352, 158], [346, 155]]);
+
+            // Japan Archipelago (Hokkaido, Honshu, Kyushu)
+            drawPath([[324, 42], [334, 44], [332, 56], [322, 54]]);
+            drawPath([[320, 56], [326, 57], [324, 62], [318, 60]]);
+
+            // UK & Ireland
+            drawPath([[166, 32], [174, 32], [172, 44], [165, 42]]);
+            drawPath([[160, 36], [164, 36], [163, 42], [159, 40]]);
+
+            // Southeast Asia Islands (Sumatra, Borneo, Philippines)
+            drawPath([[275, 92], [285, 90], [282, 105], [272, 102]]);
+            drawPath([[290, 88], [302, 86], [298, 102], [288, 100]]);
+        }
+
+        function updateWorldClockLoop() {
+            if (currentTab !== 'world_clock') return;
+
+            drawDayNightWorldMap();
+
+            const now = new Date();
+            MARKET_CENTERS.forEach(city => {
+                const cityDate = new Date(now.toLocaleString("en-US", { timeZone: city.zone }));
+                const clockCanvas = document.getElementById(`analog-${city.id}`);
+                drawAnalogClock(clockCanvas, cityDate);
+
+                const timeEl = document.getElementById(`time-${city.id}`);
+                const badgeEl = document.getElementById(`badge-${city.id}`);
+                const schedBadgeEl = document.getElementById(`sched-badge-${city.id}`);
+
+                const timeStr = cityDate.toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
+                if (timeEl) timeEl.textContent = timeStr;
+
+                const day = cityDate.getDay();
+                const decimalHour = cityDate.getHours() + cityDate.getMinutes() / 60;
+                const isWeekday = (day >= 1 && day <= 5);
+                const isOpen = isWeekday && (decimalHour >= city.openH && decimalHour < city.closeH);
+
+                const badgeText = isOpen ? "OPEN 🟢" : "CLOSED ⚪";
+                const badgeClass = isOpen ? "market-badge open" : "market-badge closed";
+
+                if (badgeEl) {
+                    badgeEl.textContent = badgeText;
+                    badgeEl.className = badgeClass;
+                }
+                if (schedBadgeEl) {
+                    schedBadgeEl.textContent = badgeText;
+                    schedBadgeEl.className = badgeClass;
+                }
+            });
+
+            worldClockAnimFrame = requestAnimationFrame(updateWorldClockLoop);
+        }
+
+        // ==========================================
+        // Interactive TradingView Modal Implementation
+        // ==========================================
+        function openChartModal(item) {
+            if (!item) return;
+            activeModalSymbol = item.symbol;
+            
+            const modal = document.getElementById('chart-modal');
+            const container = document.getElementById('tv-chart-container');
+            
+            updateModalHeader(item);
+            container.innerHTML = '';
+            modal.classList.add('active');
+
+            const tvSymbol = item.tv_symbol || item.symbol;
+            new TradingView.widget({
+                "autosize": true,
+                "symbol": tvSymbol,
+                "interval": "15",
+                "timezone": "Asia/Tokyo",
+                "theme": currentTheme,
+                "style": "1",
+                "locale": "ja",
+                "toolbar_bg": currentTheme === "dark" ? "#161820" : "#ffffff",
+                "enable_publishing": false,
+                "allow_symbol_change": true,
+                "container_id": "tv-chart-container",
+                "hide_side_toolbar": false,
+                "studies": [
+                    "MASimple@tv-basicstudies",
+                    "RSI@tv-basicstudies"
+                ]
+            });
+        }
+
+        function updateModalHeader(item) {
+            document.getElementById('modal-title').textContent = item.name;
+            document.getElementById('modal-symbol').textContent = item.tv_symbol || item.symbol;
+            document.getElementById('modal-price').innerHTML = `${formatNumber(item.price, item.decimals)} <small style="font-size:12px;font-weight:normal;color:var(--text-muted);">${item.unit}</small>`;
+            
+            const isUp = item.change >= 0;
+            const changeSign = isUp ? '+' : '';
+            const changeEl = document.getElementById('modal-change');
+            changeEl.className = `card-change-badge ${isUp ? 'up' : 'down'}`;
+            changeEl.textContent = `${changeSign}${formatNumber(item.change, item.decimals)} (${changeSign}${item.change_pct}%)`;
+        }
+
+        function closeChartModal() {
+            const modal = document.getElementById('chart-modal');
+            const container = document.getElementById('tv-chart-container');
+            modal.classList.remove('active');
+            container.innerHTML = '';
+            activeModalSymbol = null;
+        }
+
+        function handleOverlayClick(event) {
+            if (event.target.id === 'chart-modal') {
+                closeChartModal();
+            }
+        }
+
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && activeModalSymbol) {
+                closeChartModal();
+            }
+        });
+
+        // WordPress News
+        async function fetchNews() {
+            const contentArea = document.getElementById('main-content-area');
+            const controls = document.getElementById('layout-controls');
+            controls.style.display = 'none';
+            contentArea.innerHTML = '<div class="news-grid" id="grid"><div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--text-muted)">ニュースを取得中...</div></div>';
+
+            try {
+                const res = await fetch('/api/news');
+                if (!res.ok) throw new Error('HTTP ' + res.status);
+                const posts = await res.json();
+                const grid = document.getElementById('grid');
+                grid.innerHTML = '';
+
+                posts.forEach(post => {
+                    const card = document.createElement('div');
+                    card.className = 'news-card';
+                    const title = post.title ? post.title.rendered : '';
+                    const link = post.link || '#';
+                    const excerpt = post.excerpt ? post.excerpt.rendered : '';
+                    const date = new Date(post.date).toLocaleDateString('ja-JP', {
+                        year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit'
+                    });
+
+                    let imgUrl = '';
+                    if (post._embedded && post._embedded['wp:featuredmedia'] && post._embedded['wp:featuredmedia'][0].source_url) {
+                        imgUrl = post._embedded['wp:featuredmedia'][0].source_url;
+                    }
+
+                    card.innerHTML = `
+                        ${imgUrl ? `<a href="${link}" target="_blank"><img class="news-thumb" src="${imgUrl}" alt="news"></a>` : ''}
+                        <div class="news-content">
+                            <div class="news-date">📅 ${date}</div>
+                            <h3><a href="${link}" target="_blank">${title}</a></h3>
+                            <div class="news-excerpt">${excerpt}</div>
+                        </div>
+                    `;
+                    grid.appendChild(card);
+                });
+            } catch (err) {
+                const grid = document.getElementById('grid');
+                if (grid) grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:40px;color:#ef4444">ニュースの取得に失敗しました。<br><small>${err.message}</small></div>`;
+            }
+        }
+
+        function switchTab(tabId) {
+            currentTab = tabId;
+            document.querySelectorAll('.tab-link').forEach(l => l.classList.remove('active'));
+            const activeLink = document.querySelector(`.tab-link[data-tab="${tabId}"]`);
+            if (activeLink) activeLink.classList.add('active');
+
+            const meta = document.getElementById('tab-meta');
+            meta.innerHTML = `<div>${tabDescriptions[tabId] || ''} <span class="click-hint">💡 カードをクリックで詳細インタラクティブチャートがポップアップします</span></div>`;
+
+            if (worldClockAnimFrame) {
+                cancelAnimationFrame(worldClockAnimFrame);
+                worldClockAnimFrame = null;
+            }
+
+            const controls = document.getElementById('layout-controls');
+            if (tabId === 'news') {
+                if (updateTimer) clearInterval(updateTimer);
+                fetchNews();
+            } else if (tabId === 'world_clock') {
+                if (updateTimer) clearInterval(updateTimer);
+                renderWorldClock();
+            } else {
+                controls.style.display = 'flex';
+                const contentArea = document.getElementById('main-content-area');
+                if (!document.getElementById('grid') || document.querySelector('.world-clock-view') || document.querySelector('.news-grid')) {
+                    contentArea.innerHTML = `<div class="market-grid cols-${currentCols}" id="grid"></div>`;
+                }
+                fetchMarketData(true);
+                if (updateTimer) clearInterval(updateTimer);
+                updateTimer = setInterval(() => fetchMarketData(false), 2500);
+            }
+        }
+
+        // Financial Clocks
+        function updateClocks() {
+            const now = new Date();
+            const tokyo = now.toLocaleTimeString('ja-JP', { timeZone: 'Asia/Tokyo', hour12: false });
+            const london = now.toLocaleTimeString('en-GB', { timeZone: 'Europe/London', hour12: false });
+            const ny = now.toLocaleTimeString('en-US', { timeZone: 'America/New_York', hour12: false });
+
+            document.getElementById('clock-tokyo').textContent = tokyo;
+            document.getElementById('clock-london').textContent = london;
+            document.getElementById('clock-ny').textContent = ny;
+        }
+        setInterval(updateClocks, 1000);
+        updateClocks();
+
+        // Tab click listeners
+        document.querySelectorAll('.tab-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                switchTab(this.dataset.tab);
+            });
+        });
+
+        // Initialize: 24h tab
+        switchTab('24h');
+    </script>
+</body>
+</html>

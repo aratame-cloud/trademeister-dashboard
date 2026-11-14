@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  market-dashboard:
+    build: .
+    container_name: trademeister_market_dashboard
+    restart: always
+    ports:
+      - "8080:8080"
+    environment:
+      - PORT=8080
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
