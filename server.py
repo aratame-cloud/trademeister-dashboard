@@ -2,11 +2,11 @@
 """
 Trademeister Market Dashboard - Lightweight Backend Server (Phase 2 Full Engine)
 Features:
-- Complete reference site (sekai-kabuka) matching asset catalog
-- New "DEX2" menu: 24/7 tokenized synthetic individual equities (NVDA, TSLA, AAPL, SOXL, etc.)
-- Multi-source market data aggregator (Forex, Crypto, Indices, Commodities, Sunday Synthetics, DEX2)
+- Complete reference site (sekai-kabuka) matching asset catalog + DEX2 + Sunday Markets
 - Real-time external API fetching with fallback simulation
 - Precise Sunday synthetic pricing engine using live BTC correlation proxy
+- Supports XM Referral Link integration
+- Serves ultra-lightweight JSON (< 50KB) and instant HTML5 Canvas frontend
 - News cache and proxy for WordPress
 """
 
@@ -27,7 +27,9 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 # Complete market baseline definitions matching sekai-kabuka + DEX2
 INITIAL_MARKET_DATA = {
-    # --- 24h & Sunday Synthetic Markets ---
+    # ==========================================
+    # 24時間 & サンデー銘柄 (Sunday & 24h Markets)
+    # ==========================================
     "SUNDAY_DOW": {
         "name": "サンデーダウ", "symbol": "SUNDAY:DOW", "tv_symbol": "IG:DOWI",
         "category": "24h", "price": 43850.0, "base_close": 43800.0, "high": 43980.0, "low": 43710.0,
@@ -48,6 +50,11 @@ INITIAL_MARKET_DATA = {
         "category": "24h", "price": 67.25, "base_close": 67.10, "high": 67.80, "low": 66.85,
         "unit": "$", "decimals": 2, "isSunday": True, "beta": 0.06
     },
+    "SUNDAY_JP225": {
+        "name": "サンデー日経", "symbol": "SUNDAY:N225", "tv_symbol": "CAPITALCOM:JP225",
+        "category": "24h", "price": 38710.0, "base_close": 38650.0, "high": 38890.0, "low": 38580.0,
+        "unit": "円", "decimals": 0, "isSunday": True, "beta": 0.30
+    },
     "SUNDAY_EURUSD": {
         "name": "サンデーユーロ", "symbol": "SUNDAY:EURUSD", "tv_symbol": "IG:EURUSD",
         "category": "24h", "price": 1.0540, "base_close": 1.0535, "high": 1.0560, "low": 1.0520,
@@ -59,7 +66,9 @@ INITIAL_MARKET_DATA = {
         "unit": "$", "decimals": 4, "isSunday": True, "beta": 0.10
     },
 
-    # --- DEX2 (24/7 Liquid & Tokenized Equities / Synthetic ETFs) ---
+    # ==========================================
+    # DEX2 (24時間トークン化ハイテク個別株 & ETF)
+    # ==========================================
     "DEX2_NVDA": {
         "name": "エヌビディア (NVDA) DEX", "symbol": "DEX:NVDA", "tv_symbol": "NASDAQ:NVDA",
         "category": "dex2", "price": 141.50, "base_close": 140.20, "high": 143.80, "low": 139.60,
@@ -95,6 +104,16 @@ INITIAL_MARKET_DATA = {
         "category": "dex2", "price": 589.20, "base_close": 584.00, "high": 594.00, "low": 580.50,
         "unit": "$", "decimals": 2, "isSunday": True, "beta": 0.22
     },
+    "DEX2_ARM": {
+        "name": "アーム (ARM) DEX", "symbol": "DEX:ARM", "tv_symbol": "NASDAQ:ARM",
+        "category": "dex2", "price": 133.50, "base_close": 131.80, "high": 136.20, "low": 130.40,
+        "unit": "$", "decimals": 2, "isSunday": True, "beta": 0.30
+    },
+    "DEX2_MU": {
+        "name": "マイクロン (MU) DEX", "symbol": "DEX:MU", "tv_symbol": "NASDAQ:MU",
+        "category": "dex2", "price": 98.40, "base_close": 97.20, "high": 100.50, "low": 96.50,
+        "unit": "$", "decimals": 2, "isSunday": True, "beta": 0.25
+    },
     "DEX2_SOXL": {
         "name": "半導体3倍ブル (SOXL)", "symbol": "DEX:SOXL", "tv_symbol": "AMEX:SOXL",
         "category": "dex2", "price": 31.40, "base_close": 30.60, "high": 32.80, "low": 30.10,
@@ -104,11 +123,6 @@ INITIAL_MARKET_DATA = {
         "name": "NASDAQ 3倍ブル (TQQQ)", "symbol": "DEX:TQQQ", "tv_symbol": "NASDAQ:TQQQ",
         "category": "dex2", "price": 72.80, "base_close": 71.50, "high": 74.20, "low": 70.80,
         "unit": "$", "decimals": 2, "isSunday": True, "beta": 0.40
-    },
-    "DEX2_MU": {
-        "name": "マイクロン (MU) DEX", "symbol": "DEX:MU", "tv_symbol": "NASDAQ:MU",
-        "category": "dex2", "price": 98.40, "base_close": 97.20, "high": 100.50, "low": 96.50,
-        "unit": "$", "decimals": 2, "isSunday": True, "beta": 0.25
     },
     "DEX2_SFTBY": {
         "name": "ソフトバンクG (ADR) DEX", "symbol": "DEX:SFTBY", "tv_symbol": "OTC:SFTBY",
@@ -121,7 +135,9 @@ INITIAL_MARKET_DATA = {
         "unit": "$", "decimals": 1, "isSunday": True, "beta": 0.08
     },
 
-    # --- 為替 (Forex) ---
+    # ==========================================
+    # 為替レート (Forex)
+    # ==========================================
     "USDJPY": {
         "name": "米ドル / 円", "symbol": "FX:USDJPY", "tv_symbol": "FX:USDJPY",
         "category": "kawase", "price": 154.25, "base_close": 154.00, "high": 154.68, "low": 153.82,
@@ -172,6 +188,11 @@ INITIAL_MARKET_DATA = {
         "category": "kawase", "price": 7.62, "base_close": 7.58, "high": 7.68, "low": 7.55,
         "unit": "円", "decimals": 2
     },
+    "CNYJPY": {
+        "name": "人民元 / 円", "symbol": "FX:CNHJPY", "tv_symbol": "FX:CNHJPY",
+        "category": "kawase", "price": 21.28, "base_close": 21.22, "high": 21.35, "low": 21.18,
+        "unit": "円", "decimals": 2
+    },
     "EURUSD": {
         "name": "ユーロ / ドル", "symbol": "FX:EURUSD", "tv_symbol": "FX:EURUSD",
         "category": "kawase", "price": 1.0545, "base_close": 1.0530, "high": 1.0580, "low": 1.0515,
@@ -182,13 +203,20 @@ INITIAL_MARKET_DATA = {
         "category": "kawase", "price": 1.2670, "base_close": 1.2650, "high": 1.2710, "low": 1.2630,
         "unit": "$", "decimals": 4
     },
+    "AUDUSD": {
+        "name": "豪ドル / ドル", "symbol": "FX:AUDUSD", "tv_symbol": "FX:AUDUSD",
+        "category": "kawase", "price": 0.6480, "base_close": 0.6465, "high": 0.6510, "low": 0.6450,
+        "unit": "$", "decimals": 4
+    },
     "DXY": {
         "name": "米ドル指数 (DXY)", "symbol": "TVC:DXY", "tv_symbol": "TVC:DXY",
         "category": "kawase", "price": 106.65, "base_close": 106.50, "high": 106.90, "low": 106.35,
         "unit": "pt", "decimals": 2
     },
 
-    # --- 仮想通貨 (Crypto) ---
+    # ==========================================
+    # 仮想通貨 (Crypto)
+    # ==========================================
     "BTCUSDT": {
         "name": "ビットコイン (BTC)", "symbol": "CRYPTO:BTC", "tv_symbol": "BINANCE:BTCUSDT",
         "category": "crypto", "price": 91500.0, "base_close": 90200.0, "high": 92300.0, "low": 89800.0,
@@ -229,8 +257,20 @@ INITIAL_MARKET_DATA = {
         "category": "crypto", "price": 36.8, "base_close": 35.5, "high": 38.2, "low": 35.0,
         "unit": "$", "decimals": 2
     },
+    "SUIUSDT": {
+        "name": "Sui (SUI)", "symbol": "CRYPTO:SUI", "tv_symbol": "BINANCE:SUIUSDT",
+        "category": "crypto", "price": 3.25, "base_close": 3.10, "high": 3.42, "low": 3.02,
+        "unit": "$", "decimals": 3
+    },
+    "LINKUSDT": {
+        "name": "チェーンリンク (LINK)", "symbol": "CRYPTO:LINK", "tv_symbol": "BINANCE:LINKUSDT",
+        "category": "crypto", "price": 14.8, "base_close": 14.3, "high": 15.2, "low": 14.1,
+        "unit": "$", "decimals": 2
+    },
 
-    # --- 日本・アジア (Asia) ---
+    # ==========================================
+    # 日本・アジア (Asia Indices)
+    # ==========================================
     "JP225": {
         "name": "日経平均 (CFD)", "symbol": "INDEX:NKY", "tv_symbol": "CAPITALCOM:JP225",
         "category": "asia", "price": 38650.0, "base_close": 38500.0, "high": 38920.0, "low": 38410.0,
@@ -242,9 +282,14 @@ INITIAL_MARKET_DATA = {
         "unit": "pt", "decimals": 1
     },
     "JP_LEVERAGE": {
-        "name": "日経レバレッジ (CFD)", "symbol": "INDEX:JP225X2", "tv_symbol": "CAPITALCOM:JP225",
+        "name": "日経レバレッジ (1570)", "symbol": "INDEX:JP225X2", "tv_symbol": "CAPITALCOM:JP225",
         "category": "asia", "price": 27800.0, "base_close": 27550.0, "high": 28150.0, "low": 27400.0,
         "unit": "円", "decimals": 0
+    },
+    "JP_GROWTH": {
+        "name": "東証グロース250", "symbol": "INDEX:GROWTH", "tv_symbol": "TVC:MOTHERS",
+        "category": "asia", "price": 632.0, "base_close": 628.0, "high": 638.0, "low": 625.0,
+        "unit": "pt", "decimals": 1
     },
     "HK50": {
         "name": "香港ハンセン", "symbol": "INDEX:HSI", "tv_symbol": "CAPITALCOM:HK50",
@@ -254,6 +299,11 @@ INITIAL_MARKET_DATA = {
     "SHCOMP": {
         "name": "上海総合指数", "symbol": "INDEX:SHCOMP", "tv_symbol": "TVC:SHCOMP",
         "category": "asia", "price": 3330.0, "base_close": 3320.0, "high": 3352.0, "low": 3315.0,
+        "unit": "pt", "decimals": 1
+    },
+    "SZCOMP": {
+        "name": "深セン総合指数", "symbol": "INDEX:SZCOMP", "tv_symbol": "TVC:SZCOMP",
+        "category": "asia", "price": 10540.0, "base_close": 10500.0, "high": 10620.0, "low": 10460.0,
         "unit": "pt", "decimals": 1
     },
     "TAIEX": {
@@ -276,8 +326,15 @@ INITIAL_MARKET_DATA = {
         "category": "asia", "price": 8285.0, "base_close": 8260.0, "high": 8320.0, "low": 8245.0,
         "unit": "pt", "decimals": 1
     },
+    "STI": {
+        "name": "シンガポール STI", "symbol": "INDEX:STI", "tv_symbol": "TVC:STI",
+        "category": "asia", "price": 3740.0, "base_close": 3730.0, "high": 3760.0, "low": 3725.0,
+        "unit": "pt", "decimals": 1
+    },
 
-    # --- 米国・欧州 (US & EU) ---
+    # ==========================================
+    # 米国・欧州 (US & EU Indices)
+    # ==========================================
     "US30": {
         "name": "NYダウ (CFD)", "symbol": "INDEX:DJI", "tv_symbol": "CAPITALCOM:US30",
         "category": "us_eu", "price": 43440.0, "base_close": 43400.0, "high": 43620.0, "low": 43280.0,
@@ -318,6 +375,11 @@ INITIAL_MARKET_DATA = {
         "category": "us_eu", "price": 7270.0, "base_close": 7255.0, "high": 7310.0, "low": 7230.0,
         "unit": "pt", "decimals": 1
     },
+    "EU50": {
+        "name": "ユーロ・ストックス50", "symbol": "INDEX:EU50", "tv_symbol": "CAPITALCOM:EU50",
+        "category": "us_eu", "price": 4795.0, "base_close": 4780.0, "high": 4825.0, "low": 4765.0,
+        "unit": "pt", "decimals": 1
+    },
     "US10Y": {
         "name": "米10年国債利回り", "symbol": "BOND:US10Y", "tv_symbol": "TVC:US10Y",
         "category": "us_eu", "price": 4.435, "base_close": 4.420, "high": 4.460, "low": 4.405,
@@ -334,7 +396,9 @@ INITIAL_MARKET_DATA = {
         "unit": "pt", "decimals": 2
     },
 
-    # --- 商品 (Commodities) ---
+    # ==========================================
+    # コモディティ (Commodities)
+    # ==========================================
     "GOLD": {
         "name": "金スポット (Gold)", "symbol": "COMMODITY:GOLD", "tv_symbol": "TVC:GOLD",
         "category": "commodity", "price": 2565.0, "base_close": 2560.0, "high": 2580.0, "low": 2552.0,
@@ -348,6 +412,11 @@ INITIAL_MARKET_DATA = {
     "PLATINUM": {
         "name": "プラチナ (Platinum)", "symbol": "COMMODITY:PLAT", "tv_symbol": "TVC:PLATINUM",
         "category": "commodity", "price": 945.0, "base_close": 940.0, "high": 955.0, "low": 935.0,
+        "unit": "$", "decimals": 1
+    },
+    "PALLADIUM": {
+        "name": "パラジウム (Palladium)", "symbol": "COMMODITY:PALL", "tv_symbol": "TVC:PALLADIUM",
+        "category": "commodity", "price": 985.0, "base_close": 980.0, "high": 998.0, "low": 972.0,
         "unit": "$", "decimals": 1
     },
     "USOIL": {
@@ -378,6 +447,11 @@ INITIAL_MARKET_DATA = {
     "WHEAT": {
         "name": "小麦 (Wheat)", "symbol": "COMMODITY:WHEAT", "tv_symbol": "TVC:WHEAT",
         "category": "commodity", "price": 545.0, "base_close": 540.0, "high": 552.0, "low": 538.0,
+        "unit": "¢", "decimals": 1
+    },
+    "SOYBEAN": {
+        "name": "大豆 (Soybean)", "symbol": "COMMODITY:SOY", "tv_symbol": "TVC:SOYBEAN",
+        "category": "commodity", "price": 995.0, "base_close": 990.0, "high": 1005.0, "low": 984.0,
         "unit": "¢", "decimals": 1
     },
 }
@@ -568,9 +642,11 @@ class DashboardHandler(SimpleHTTPRequestHandler):
                 self.wfile.write(err_body)
                 return
 
-        # Serve frontend dashboard_v2.html for root path
+        # Serve frontend dashboard_v2.html or index.html for root path
         if path in ["/", "/index.html"]:
             filepath = os.path.join(BASE_DIR, "dashboard_v2.html")
+            if not os.path.exists(filepath):
+                filepath = os.path.join(BASE_DIR, "index.html")
             if os.path.exists(filepath):
                 with open(filepath, "rb") as f:
                     content = f.read()
