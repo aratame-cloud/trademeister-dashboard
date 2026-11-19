@@ -3,7 +3,111 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trademeister サーバー版マーケットダッシュボード (リアル世界地図・DEX2対応)</title>
+    <title>Trademeister マーケットダッシュボード | リアルタイム世界株価・為替・仮想通貨・DEX2・世界時計</title>
+
+    <!-- Favicon & Touch Icons -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="alternate icon" href="/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="canonical" href="https://trademeister-dashboard.onrender.com/">
+
+    <!-- Primary SEO Meta Tags -->
+    <meta name="title" content="Trademeister マーケットダッシュボード | リアルタイム世界株価・為替・仮想通貨・DEX2・世界時計">
+    <meta name="description" content="世界の株価、為替(ドル円・クロス円)、暗号資産、コモディティ、24時間DEX2(AnthropicプレIPO株価含む)、土日も動くサンデー市場、リアルタイム昼夜世界時計を広告なし・超高速表示するTrademeister公式ダッシュボード。">
+    <meta name="keywords" content="世界の株価,リアルタイム株価,為替,ドル円,仮想通貨,DEX2,Anthropic株価,アンスロピック,サンデーダウ,日曜株価,Trademeister,日経平均,NYダウ,世界時計">
+    <meta name="author" content="Trademeister">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <meta name="theme-color" content="#0f1013">
+
+    <!-- Open Graph / Facebook / LINE (SNS Optimization) -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://trademeister-dashboard.onrender.com/">
+    <meta property="og:title" content="Trademeister マーケットダッシュボード | リアルタイム世界株価・為替・DEX2・世界時計">
+    <meta property="og:description" content="広告なし・超高速。世界の主要株価指数、為替、暗号資産、24時間DEX2(AnthropicプレIPO株価含む)、リアルタイム世界地図時計を集約。">
+    <meta property="og:image" content="https://trademeister.org/wp-content/uploads/2024/09/cropped-acab869fbf012b6278e4a10923f2193c.png">
+    <meta property="og:site_name" content="Trademeister (トレードマイスター)">
+    <meta property="og:locale" content="ja_JP">
+
+    <!-- Twitter Card -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://trademeister-dashboard.onrender.com/">
+    <meta property="twitter:title" content="Trademeister マーケットダッシュボード | リアルタイム世界株価・為替・DEX2">
+    <meta property="twitter:description" content="広告なし・超高速。リアルタイム世界株価・為替・暗号資産・DEX2・AnthropicプレIPO株価・リアルタイム世界地図時計。">
+    <meta property="twitter:image" content="https://trademeister.org/wp-content/uploads/2024/09/cropped-acab869fbf012b6278e4a10923f2193c.png">
+
+    <!-- AIO & LLMO: Schema.org Structured Data (JSON-LD) for Search Engines & LLMs -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "WebApplication",
+          "@id": "https://trademeister-dashboard.onrender.com/#webapp",
+          "name": "Trademeister マーケットダッシュボード",
+          "url": "https://trademeister-dashboard.onrender.com/",
+          "applicationCategory": "FinanceApplication",
+          "operatingSystem": "All",
+          "browserRequirements": "Requires JavaScript. Requires HTML5 Canvas.",
+          "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "JPY"
+          },
+          "description": "世界の株価指数、為替、暗号資産、24時間DEX2トークン化個別株（AnthropicプレIPO株価含む）、土日のサンデー市場、リアルタイム昼夜世界地図時計を広告なしで超高速表示する金融ダッシュボードアプリケーション。"
+        },
+        {
+          "@type": "FinancialService",
+          "@id": "https://trademeister.org/#organization",
+          "name": "Trademeister (トレードマイスター)",
+          "url": "https://trademeister.org",
+          "logo": "https://trademeister.org/wp-content/uploads/2024/09/cropped-acab869fbf012b6278e4a10923f2193c.png",
+          "sameAs": [
+            "https://trademeister.org"
+          ],
+          "description": "投資家・トレーダー向けのリアルタイム金融市場分析、市場ニュース、マーケットダッシュボードを提供する情報プラットフォーム。"
+        },
+        {
+          "@type": "FAQPage",
+          "@id": "https://trademeister-dashboard.onrender.com/#faq",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "土日や祝日でも株価や為替の動向を確認できますか？",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "はい、Trademeisterマーケットダッシュボードでは「24h/週末」タブにて、ビットコインや週末OTC取引モデルと相関させた独自のサンデーダウ、サンデードル円、サンデーゴールド、および主要暗号資産をリアルタイムで追跡・シミュレーション表示しています。"
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Anthropic（アンスロピック）の株価や取引情報はどこで確認できますか？",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "「DEX2 ⚡」「24h/週末」タブにて、未公開株セカンダリー市場推定気配値（基準$38.50）をベースにしたプレIPO合成指数をリアルタイム掲載しています。またカード詳細からXM Trading MT5口座を通じた24時間CFD取引の案内も提供しています。"
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "世界の主要金融市場の取引時間と時差はどのように確認できますか？",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "「世界時計 🗺️」タブにて、リアルタイムの太陽光昼夜境界（ターミネーター）を表示する世界地図と、東京、ニューヨーク、ロンドン、シドニー、香港等の主要8大金融市場のアナログ時計および市場開場状態（OPEN/CLOSED）を一目で確認できます。"
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Trademeisterダッシュボードは無料で利用できますか？広告はありますか？",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "完全無料でご利用いただけます。第三者のバナー広告や煩わしいトラッカーは一切排除し、独自のHTML5 Canvas超軽量描画により、PCやスマートフォンから瞬時に高速表示されます。"
+              }
+            }
+          ]
+        }
+      ]
+    }
+    </script>
+
     <!-- TradingView Advanced Chart Library (Loaded on-demand only when modal opens) -->
     <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
     <style>
@@ -438,6 +542,52 @@
             white-space: nowrap;
         }
 
+        .preipo-tag {
+            background: linear-gradient(135deg, rgba(249, 115, 22, 0.25), rgba(234, 88, 12, 0.35));
+            color: #fb923c;
+            border: 1px solid rgba(249, 115, 22, 0.5);
+            font-size: 9px;
+            font-weight: 700;
+            padding: 1px 5px;
+            border-radius: 3px;
+            white-space: nowrap;
+            letter-spacing: 0.3px;
+        }
+
+        .modal-banner-preipo {
+            background: linear-gradient(90deg, rgba(234, 88, 12, 0.15), rgba(245, 158, 11, 0.15));
+            border-bottom: 1px solid rgba(249, 115, 22, 0.3);
+            padding: 8px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            font-size: 12px;
+        }
+
+        .modal-banner-preipo .banner-text {
+            color: var(--text-color);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .modal-banner-preipo .banner-btn {
+            background: linear-gradient(135deg, #ea580c, #c2410c);
+            color: #ffffff !important;
+            padding: 4px 12px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 11.5px;
+            white-space: nowrap;
+            transition: opacity 0.2s;
+        }
+
+        .modal-banner-preipo .banner-btn:hover {
+            opacity: 0.9;
+        }
+
         .card-body {
             display: flex;
             align-items: baseline;
@@ -628,7 +778,7 @@
             height: 100%;
         }
 
-        /* World Clock Tab View */
+        /* Refined World Clock View (Matching Reference Image) */
         .world-clock-view {
             display: flex;
             flex-direction: column;
@@ -636,13 +786,13 @@
         }
 
         .world-map-card {
-            background-color: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 18px;
+            background-color: #0b0c0e;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 14px;
+            padding: 16px;
             position: relative;
             overflow: hidden;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
         }
 
         .world-map-header {
@@ -655,8 +805,9 @@
         }
 
         .world-map-header h2 {
-            font-size: 16px;
+            font-size: 15px;
             font-weight: 700;
+            color: #ffffff;
             display: flex;
             align-items: center;
             gap: 8px;
@@ -665,16 +816,13 @@
         .world-map-container {
             position: relative;
             width: 100%;
-            aspect-ratio: 2 / 1;
-            max-height: 560px;
-            background-color: #2b3e58; /* Daytime Vivid Ocean */
-            border-radius: 8px;
+            aspect-ratio: 2.1 / 1;
+            min-height: 380px;
+            max-height: 520px;
+            background-color: #000000; /* Pure Black Ocean */
+            border-radius: 10px;
             overflow: hidden;
-            border: 1px solid var(--border-color);
-            box-shadow: inset 0 0 25px rgba(0,0,0,0.4);
-        }
-        body.theme-light .world-map-container {
-            background-color: #60a5fa;
+            border: 1px solid rgba(255, 255, 255, 0.08);
         }
 
         #world-map-canvas {
@@ -683,107 +831,116 @@
             display: block;
         }
 
-        /* Compact Analog Clock Markers (Size halved: 28px width) */
-        .city-marker {
+        /* City Markers on Map: Orange Dot + Clean Text (Matching Reference Image) */
+        .refined-map-marker {
             position: absolute;
             transform: translate(-50%, -50%);
             display: flex;
-            flex-direction: column;
             align-items: center;
-            cursor: pointer;
+            gap: 6px;
             z-index: 10;
-            transition: transform 0.15s, z-index 0.1s;
-        }
-        .city-marker:hover {
-            transform: translate(-50%, -55%) scale(1.18);
-            z-index: 30;
+            cursor: pointer;
+            transition: transform 0.15s;
         }
 
-        /* Halved 28px Pure White Analog Clock */
-        .analog-clock-canvas {
-            width: 28px;
-            height: 28px;
+        .refined-map-marker:hover {
+            transform: translate(-50%, -50%) scale(1.15);
+            z-index: 25;
+        }
+
+        .refined-orange-dot {
+            width: 7px;
+            height: 7px;
+            background-color: #ff9500;
             border-radius: 50%;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.6), 0 0 0 1.5px rgba(255, 255, 255, 0.95);
-            background: #ffffff !important;
+            box-shadow: 0 0 8px rgba(255, 149, 0, 0.9);
+            flex-shrink: 0;
         }
 
-        .city-info-tag {
-            background: rgba(15, 17, 23, 0.92);
-            backdrop-filter: blur(4px);
-            border: 1px solid var(--border-color);
-            padding: 2px 5px;
-            border-radius: 4px;
-            margin-top: 2px;
-            text-align: center;
-            white-space: nowrap;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.5);
-            pointer-events: none;
-        }
-        body.theme-light .city-info-tag {
-            background: rgba(255, 255, 255, 0.95);
-            border-color: #cbd5e1;
-        }
-
-        .city-name {
-            font-size: 9.5px;
-            font-weight: 700;
-            color: var(--text-color);
-            line-height: 1.1;
-        }
-
-        .city-digital-time {
-            font-size: 8.5px;
-            font-family: monospace;
-            color: var(--text-muted);
-            font-weight: 600;
-            line-height: 1.1;
-        }
-
-        .market-badge {
-            font-size: 7.5px;
-            font-weight: 700;
-            padding: 0.5px 3px;
-            border-radius: 2px;
-            display: inline-block;
-            margin-top: 1px;
-            line-height: 1;
-        }
-        .market-badge.open {
-            background: var(--up-bg);
-            color: var(--up-color);
-            border: 1px solid rgba(16, 185, 129, 0.4);
-        }
-        .market-badge.closed {
-            background: rgba(150, 150, 150, 0.15);
-            color: var(--text-muted);
-        }
-
-        /* Schedule Timeline */
-        .market-schedule-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
-            gap: 10px;
-        }
-
-        .schedule-card {
-            background-color: var(--surface-color);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 10px 12px;
+        .refined-marker-label {
             display: flex;
-            align-items: center;
-            justify-content: space-between;
+            flex-direction: column;
+            white-space: nowrap;
+            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.95), 0 0 2px rgba(0, 0, 0, 0.95);
         }
 
-        .schedule-info h4 {
-            font-size: 12px;
+        .refined-marker-label.left {
+            position: absolute;
+            right: 12px;
+            align-items: flex-end;
+        }
+
+        .refined-marker-label.right {
+            position: absolute;
+            left: 12px;
+            align-items: flex-start;
+        }
+
+        .refined-marker-label .city-name {
+            font-size: 11px;
+            font-weight: 700;
+            color: #ffffff;
+            line-height: 1.15;
+        }
+
+        .refined-marker-label .city-time {
+            font-size: 10px;
+            font-weight: 500;
+            color: #e5e7eb;
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", monospace;
+            line-height: 1.15;
+        }
+
+        /* Bottom Section: Dedicated Analog Clock Cards Grid */
+        .refined-clock-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+        }
+
+        .refined-clock-card {
+            background-color: #1f2127;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 22px 16px 18px 16px;
+            text-align: center;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+            transition: transform 0.15s, border-color 0.15s;
+            cursor: pointer;
+        }
+
+        .refined-clock-card:hover {
+            transform: translateY(-2px);
+            border-color: rgba(255, 149, 0, 0.4);
+        }
+
+        .refined-clock-card canvas {
+            width: 96px;
+            height: 96px;
+            margin: 0 auto 14px auto;
+            display: block;
+            border-radius: 50%;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+        }
+
+        .refined-clock-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2.5px;
+        }
+
+        .refined-clock-title {
+            font-size: 13.5px;
+            font-weight: 700;
+            color: #ffffff;
             margin-bottom: 2px;
         }
 
-        .schedule-info span {
-            font-size: 10.5px;
-            color: var(--text-muted);
+        .refined-clock-offset,
+        .refined-clock-sun {
+            font-size: 11.5px;
+            color: #9ca3af;
+            line-height: 1.4;
         }
 
         /* Pending Issues Note Box */
@@ -807,6 +964,120 @@
         .pending-box ul {
             margin-left: 20px;
             line-height: 1.6;
+        }
+
+        /* SEO / AIO / LLMO Semantic Overview Section */
+        .seo-semantic-section {
+            background-color: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px 24px;
+            margin-top: 24px;
+            color: var(--text-color);
+        }
+
+        .seo-semantic-section h2 {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-color);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .seo-intro-desc {
+            font-size: 13px;
+            color: var(--text-muted);
+            line-height: 1.6;
+            margin-bottom: 18px;
+        }
+
+        .seo-pillars-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 14px;
+            margin-bottom: 22px;
+        }
+
+        .seo-pillar-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 14px;
+        }
+
+        .seo-pillar-card h3 {
+            font-size: 13.5px;
+            font-weight: 700;
+            color: var(--accent-color);
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .seo-pillar-card p {
+            font-size: 12px;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        .seo-faq-area h3 {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-color);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .seo-faq-item {
+            border-bottom: 1px solid var(--border-color);
+            padding: 10px 0;
+        }
+
+        .seo-faq-item summary {
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            color: var(--text-color);
+            outline: none;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .seo-faq-item summary::-webkit-details-marker {
+            display: none;
+        }
+
+        .seo-faq-item p {
+            font-size: 12.5px;
+            color: var(--text-muted);
+            line-height: 1.6;
+            margin-top: 8px;
+            padding-left: 4px;
+        }
+
+        .seo-ai-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: var(--accent-color);
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .seo-ai-badge:hover {
+            background: rgba(16, 185, 129, 0.2);
+            border-color: var(--accent-color);
         }
 
         /* News Layout */
@@ -974,10 +1245,66 @@
             <h4>📋 実装検討課題銘柄リスト</h4>
             <ul>
                 <li><strong>キオクシア (Kioxia)</strong>: 未上場銘柄のため、現在は一般パブリックデータフィードが存在しません。公式上場または安定したOTCフィードが提供され次第、即時組み込み予定です。</li>
-                <li><strong>Anthropic (アンスロピック)</strong>: 未上場スタートアップ企業のため、公式取引所ティッカーは未割当です（上部XM等のMT5プレIPO市場等で先行取扱）。</li>
+                <li><strong>Anthropic (アンスロピック)</strong>: <span style="color:#10b981;font-weight:700;">【先行掲載中】</span> セカンダリー市場推定気配値（基準$38.50）として「24h/週末」「DEX2 ⚡」タブにリアルタイム掲載中（上部XM等のMT5にて24時間CFD取引可能）。</li>
                 <li><strong>東証プライム個別銘柄の直接板情報</strong>: JPXのリアルタイム配信ライセンス規約に対応するため、現在はADRおよび先物・CFDプロキシにて稼働しています。</li>
             </ul>
         </div>
+
+        <!-- SEO / AIO / LLMO Semantic Grounding Section -->
+        <section class="seo-semantic-section" aria-label="Trademeister マーケット概要とよくある質問">
+            <h2>📈 Trademeister マーケットダッシュボードについて</h2>
+            <p class="seo-intro-desc">
+                Trademeister（トレードマイスター）は、株式・為替・暗号資産トレーダー向けに、世界中の金融データを広告なし・ミリ秒単位で高速描画するオープンな金融ダッシュボードです。土日や夜間も動くサンデー市場シミュレーション、24時間365日取引可能なDEX2トークン化ハイテク株、Anthropic（アンスロピック）プレIPO推定気配値、およびリアルタイム昼夜世界地図時計を統合しています。
+            </p>
+
+            <div class="seo-pillars-grid">
+                <article class="seo-pillar-card">
+                    <h3>⚡ 広告なし・超高速Canvas描画</h3>
+                    <p>重たい外部iframeや広告トラッカーを徹底排除し、HTML5 Canvasスパークラインによる0.01秒の圧倒的描画レスポンスを実現。クリックでTradingView詳細チャートを自在に起動できます。</p>
+                </article>
+                <article class="seo-pillar-card">
+                    <h3>🌙 土日・週末サンデー市場追跡</h3>
+                    <p>市場閉場中の土日・祝日でも、ビットコインや週末OTC取引モデルとの相関をリアルタイム演算し、日曜ダウ・日曜ドル円・日曜ゴールドの気配値推移をシミュレーション表示します。</p>
+                </article>
+                <article class="seo-pillar-card">
+                    <h3>🚀 Anthropic (プレIPO) & DEX2</h3>
+                    <p>話題の生成AI企業「Anthropic」のセカンダリー市場推定気配値（基準$38.50）を先行掲載。NVDAやTSLAなどの24時間トークン化株式やXM MT5でのCFD取引に対応しています。</p>
+                </article>
+                <article class="seo-pillar-card">
+                    <h3>🌍 リアルタイム昼夜世界地図＆世界時計</h3>
+                    <p>太陽光のリアルタイム昼夜境界線（ターミネーター）を描画する世界地図上に、東京・NY・ロンドン・香港など主要8大金融市場のアナログ時計と取引セッション状態をリアルタイム表示します。</p>
+                </article>
+            </div>
+
+            <div class="seo-faq-area">
+                <h3>❓ よくある質問 (FAQ)</h3>
+                <details class="seo-faq-item" open>
+                    <summary>Q. 土日や祝日でも株価や為替の動向を確認できますか？</summary>
+                    <p>A. はい、「24h/週末」タブにて、週末も24時間稼働する暗号資産や週末OTC取引モデルと相関させた独自のサンデーダウ、サンデードル円、サンデーゴールドをリアルタイムで追跡可能です。</p>
+                </details>
+                <details class="seo-faq-item">
+                    <summary>Q. Anthropic（アンスロピック）の株価情報はどのように確認・取引できますか？</summary>
+                    <p>A. 「DEX2 ⚡」および「24h/週末」タブにて、未公開株セカンダリー市場推定気配値（基準$38.50）をベースにしたプレIPO合成指数をリアルタイム掲載しています。またカードクリックによりXM Trading MT5口座での24時間CFD取引案内も提供しています。</p>
+                </details>
+                <details class="seo-faq-item">
+                    <summary>Q. 世界の金融市場の取引時間や時差はどこで見られますか？</summary>
+                    <p>A. 「世界時計 🗺️」タブにて、リアルタイムの太陽光昼夜境界世界地図と、各国の現地取引時間、主要金融センターのアナログ時計（OPEN/CLOSED判定付き）を確認できます。</p>
+                </details>
+                <details class="seo-faq-item">
+                    <summary>Q. ダッシュボードの利用料金や広告はありますか？</summary>
+                    <p>A. 完全無料でご利用いただけます。第三者のバナー広告や煩雑なトラッカーは一切設置していません。</p>
+                </details>
+            </div>
+
+            <div style="margin-top: 18px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
+                <a href="/llms.txt" class="seo-ai-badge" target="_blank" title="AIエージェント・LLM向け仕様書">
+                    <span>🤖</span> <span>LLM / AI Agent Specification (llms.txt)</span>
+                </a>
+                <a href="https://trademeister.org" target="_blank" style="font-size: 11.5px; color: var(--text-muted); text-decoration: none;">
+                    Trademeister 公式サイト (trademeister.org) ↗
+                </a>
+            </div>
+        </section>
     </div>
 
     <!-- Interactive TradingView Modal -->
@@ -992,6 +1319,7 @@
                 </div>
                 <button class="modal-close-btn" onclick="closeChartModal()" title="閉じる (Esc)">×</button>
             </div>
+            <div id="modal-preipo-banner" style="display:none;"></div>
             <div class="modal-body">
                 <div id="tv-chart-container"></div>
             </div>
@@ -1021,16 +1349,18 @@
             "news": "本体サイト (trademeister.org) の最新マーケット速報・投資ニュース"
         };
 
-        // Financial Market Centers configuration
-        const MARKET_CENTERS = [
-            { id: "sydney", name: "シドニー", zone: "Australia/Sydney", x: 88, y: 73, openH: 10, closeH: 16, market: "ASX" },
-            { id: "tokyo", name: "東京", zone: "Asia/Tokyo", x: 84.5, y: 38, openH: 9, closeH: 15, market: "TSE" },
-            { id: "hongkong", name: "香港", zone: "Asia/Hong_Kong", x: 79, y: 47, openH: 9.5, closeH: 16, market: "HKEX" },
-            { id: "zurich", name: "チューリッヒ", zone: "Europe/Zurich", x: 52.5, y: 40, openH: 9, closeH: 17.5, market: "SIX" },
-            { id: "frankfurt", name: "フランクフルト", zone: "Europe/Berlin", x: 54, y: 24, openH: 9, closeH: 17.5, market: "DAX" },
-            { id: "london", name: "ロンドン", zone: "Europe/London", x: 46.5, y: 31, openH: 8, closeH: 16.5, market: "LSE" },
-            { id: "newyork", name: "ニューヨーク", zone: "America/New_York", x: 27, y: 34, openH: 9.5, closeH: 16, market: "NYSE" },
-            { id: "sanfrancisco", name: "サンフランシスコ", zone: "America/Los_Angeles", x: 15.5, y: 37, openH: 6.5, closeH: 13, market: "US-West" }
+        // Financial Centers & Cities configuration (matching refined visual reference)
+        const REFINED_WORLD_CITIES = [
+            { id: "tokyo", name: "東京", zone: "Asia/Tokyo", lat: 35.68, lon: 139.76, tzOffset: 9, x: 89.5, y: 36, labelPos: "right" },
+            { id: "london", name: "ロンドン", zone: "Europe/London", lat: 51.51, lon: -0.13, tzOffset: 0, x: 48, y: 26, labelPos: "left" },
+            { id: "newyork", name: "ニューヨーク", zone: "America/New_York", lat: 40.71, lon: -74.01, tzOffset: -5, x: 28, y: 35, labelPos: "right" },
+            { id: "sanfrancisco", name: "サンフランシスコ", zone: "America/Los_Angeles", lat: 37.77, lon: -122.42, tzOffset: -8, x: 16, y: 36, labelPos: "right" },
+            { id: "geneva", name: "ジュネーブ", zone: "Europe/Zurich", lat: 46.20, lon: 6.14, tzOffset: 1, x: 52, y: 29, labelPos: "right" },
+            { id: "dubai", name: "ドバイ", zone: "Asia/Dubai", lat: 25.20, lon: 55.27, tzOffset: 4, x: 65, y: 41, labelPos: "right" },
+            { id: "hongkong", name: "香港", zone: "Asia/Hong_Kong", lat: 22.32, lon: 114.17, tzOffset: 8, x: 82, y: 44, labelPos: "right" },
+            { id: "singapore", name: "シンガポール", zone: "Asia/Singapore", lat: 1.35, lon: 103.82, tzOffset: 8, x: 79, y: 58, labelPos: "right" },
+            { id: "lagos", name: "ラゴス", zone: "Africa/Lagos", lat: 6.52, lon: 3.38, tzOffset: 1, x: 50.5, y: 54, labelPos: "right" },
+            { id: "sydney", name: "シドニー", zone: "Australia/Sydney", lat: -33.87, lon: 151.21, tzOffset: 11, x: 91, y: 76, labelPos: "right" }
         ];
 
         let currentTab = "24h";
@@ -1171,7 +1501,9 @@
                         const changeSign = isUp ? '+' : '';
                         const changeBadgeClass = isUp ? 'up' : 'down';
                         let tagHtml = '';
-                        if (item.isSunday && item.category !== 'dex2') {
+                        if (item.isPreIPO) {
+                            tagHtml = '<span class="preipo-tag">プレIPO ⚡</span>';
+                        } else if (item.isSunday && item.category !== 'dex2') {
                             tagHtml = '<span class="sunday-tag">SUNDAY</span>';
                         } else if (item.category === 'dex2') {
                             tagHtml = '<span class="dex-tag">DEX2</span>';
@@ -1294,7 +1626,8 @@
                         </div>
                     </div>
 
-                    <div class="market-schedule-grid" id="market-schedules"></div>
+                    <!-- Bottom Clocks Section (matching refined reference image) -->
+                    <div class="refined-clock-grid" id="refined-clocks-container"></div>
                 </div>
             `;
 
@@ -1304,126 +1637,191 @@
 
         function initWorldMap() {
             const markersLayer = document.getElementById('city-markers-layer');
-            markersLayer.innerHTML = '';
+            if (markersLayer) {
+                markersLayer.innerHTML = '';
+                REFINED_WORLD_CITIES.forEach(city => {
+                    const marker = document.createElement('div');
+                    marker.className = 'refined-map-marker';
+                    marker.id = `map-marker-${city.id}`;
+                    marker.style.left = `${city.x}%`;
+                    marker.style.top = `${city.y}%`;
 
-            MARKET_CENTERS.forEach(city => {
-                const marker = document.createElement('div');
-                marker.className = 'city-marker';
-                marker.id = `marker-${city.id}`;
-                marker.style.left = `${city.x}%`;
-                marker.style.top = `${city.y}%`;
+                    marker.innerHTML = `
+                        <span class="refined-orange-dot"></span>
+                        <div class="refined-marker-label ${city.labelPos}">
+                            <div class="city-name">${city.name}</div>
+                            <div class="city-time" id="map-time-${city.id}">--:--</div>
+                        </div>
+                    `;
 
-                marker.innerHTML = `
-                    <canvas class="analog-clock-canvas" id="analog-${city.id}" width="80" height="80"></canvas>
-                    <div class="city-info-tag">
-                        <div class="city-name">${city.name}</div>
-                        <div class="city-digital-time" id="time-${city.id}">--:--</div>
-                        <div class="market-badge" id="badge-${city.id}">CHECKING</div>
-                    </div>
-                `;
-
-                marker.addEventListener('click', () => {
-                    if (city.id === 'tokyo') switchTab('asia');
-                    else if (city.id === 'newyork' || city.id === 'sanfrancisco') switchTab('us_eu');
-                    else if (city.id === 'london' || city.id === 'frankfurt' || city.id === 'zurich') switchTab('us_eu');
-                    else switchTab('24h');
+                    marker.addEventListener('click', () => handleCityClick(city.id));
+                    markersLayer.appendChild(marker);
                 });
-
-                markersLayer.appendChild(marker);
-            });
-
-            const scheduleGrid = document.getElementById('market-schedules');
-            scheduleGrid.innerHTML = '';
-            MARKET_CENTERS.forEach(city => {
-                const card = document.createElement('div');
-                card.className = 'schedule-card';
-                card.innerHTML = `
-                    <div class="schedule-info">
-                        <h4>${city.name} (${city.market})</h4>
-                        <span>現地取引時間: ${city.openH}:00 - ${city.closeH}:00</span>
-                    </div>
-                    <div class="market-badge" id="sched-badge-${city.id}">--</div>
-                `;
-                scheduleGrid.appendChild(card);
-            });
-        }
-
-        // Always White Background Analog Clock (Halved 28px rendering)
-        function drawAnalogClock(canvas, date) {
-            if (!canvas) return;
-            const ctx = canvas.getContext('2d');
-            const w = canvas.width;
-            const h = canvas.height;
-            const r = w / 2;
-
-            ctx.clearRect(0, 0, w, h);
-            ctx.save();
-            ctx.translate(r, r);
-
-            // 1. Dial Face: Pure White
-            ctx.beginPath();
-            ctx.arc(0, 0, r - 2, 0, 2 * Math.PI);
-            ctx.fillStyle = '#ffffff';
-            ctx.fill();
-
-            // Bezel Outer Ring
-            ctx.lineWidth = 2.5;
-            ctx.strokeStyle = '#1e293b';
-            ctx.stroke();
-
-            // 2. Hour Ticks
-            ctx.lineCap = 'round';
-            for (let i = 0; i < 12; i++) {
-                const angle = (i * Math.PI) / 6;
-                ctx.beginPath();
-                ctx.lineWidth = (i % 3 === 0) ? 3 : 1.5;
-                ctx.strokeStyle = (i % 3 === 0) ? '#0f172a' : '#64748b';
-                ctx.moveTo(Math.cos(angle) * (r - 7), Math.sin(angle) * (r - 7));
-                ctx.lineTo(Math.cos(angle) * (r - 3), Math.sin(angle) * (r - 3));
-                ctx.stroke();
             }
 
+            const clocksContainer = document.getElementById('refined-clocks-container');
+            if (clocksContainer) {
+                clocksContainer.innerHTML = '';
+                REFINED_WORLD_CITIES.forEach(city => {
+                    const card = document.createElement('div');
+                    card.className = 'refined-clock-card';
+                    card.id = `card-${city.id}`;
+
+                    card.innerHTML = `
+                        <canvas id="card-analog-${city.id}" width="192" height="192"></canvas>
+                        <div class="refined-clock-info">
+                            <div class="refined-clock-title" id="card-title-${city.id}">${city.name}、--:--</div>
+                            <div class="refined-clock-offset" id="card-offset-${city.id}">今日、+0 時間</div>
+                            <div class="refined-clock-sun" id="card-sunrise-${city.id}">日の出: --:--</div>
+                            <div class="refined-clock-sun" id="card-sunset-${city.id}">日の入: --:--</div>
+                        </div>
+                    `;
+
+                    card.addEventListener('click', () => handleCityClick(city.id));
+                    clocksContainer.appendChild(card);
+                });
+            }
+        }
+
+        function handleCityClick(cityId) {
+            if (cityId === 'tokyo' || cityId === 'hongkong' || cityId === 'singapore') {
+                switchTab('asia');
+            } else if (cityId === 'newyork' || cityId === 'sanfrancisco' || cityId === 'london' || cityId === 'geneva') {
+                switchTab('us_eu');
+            } else {
+                switchTab('24h');
+            }
+        }
+
+        // Astronomical NOAA Sunrise / Sunset calculation
+        function getCitySunTimes(lat, lon, tzOffsetHours) {
+            const now = new Date();
+            const start = new Date(Date.UTC(now.getUTCFullYear(), 0, 0));
+            const dayOfYear = Math.floor((now - start) / (1000 * 60 * 60 * 24));
+
+            const gamma = 2 * Math.PI / 365 * (dayOfYear - 1 + (12 - tzOffsetHours) / 24);
+            const eqtime = 229.18 * (0.000075 + 0.001868 * Math.cos(gamma) - 0.032077 * Math.sin(gamma)
+                         - 0.014615 * Math.cos(2 * gamma) - 0.040849 * Math.sin(2 * gamma));
+            const decl = 0.006918 - 0.399912 * Math.cos(gamma) + 0.070257 * Math.sin(gamma)
+                       - 0.006758 * Math.cos(2 * gamma) + 0.000907 * Math.sin(2 * gamma)
+                       - 0.002697 * Math.cos(3 * gamma) + 0.00148 * Math.sin(3 * gamma);
+
+            const latRad = lat * (Math.PI / 180);
+            let cosHa = (Math.cos(90.833 * Math.PI / 180) / (Math.cos(latRad) * Math.cos(decl))) - (Math.tan(latRad) * Math.tan(decl));
+            cosHa = Math.max(-1.0, Math.min(1.0, cosHa));
+            const ha = (Math.acos(cosHa) * 180 / Math.PI);
+
+            const solarNoon = 720 - 4 * lon - eqtime + tzOffsetHours * 60;
+            const sunriseMin = (solarNoon - ha * 4 + 1440) % 1440;
+            const sunsetMin = (solarNoon + ha * 4 + 1440) % 1440;
+
+            const srH = Math.floor(sunriseMin / 60);
+            const srM = Math.floor(sunriseMin % 60);
+            const ssH = Math.floor(sunsetMin / 60);
+            const ssM = Math.floor(sunsetMin % 60);
+
+            const pad = n => String(n).padStart(2, '0');
+            return {
+                sunriseStr: `${srH}:${pad(srM)}`,
+                sunsetStr: `${ssH}:${pad(ssM)}`,
+                sunriseMin: srH * 60 + srM,
+                sunsetMin: ssH * 60 + ssM
+            };
+        }
+
+        // Classic Analog Clock with Arabic Numerals 1-12 & Day/Night Dynamic Face
+        function drawRefinedClock(canvas, date, isDay) {
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            const dpr = window.devicePixelRatio || 1;
+            const w = 96;
+            const h = 96;
+
+            if (canvas.width !== w * dpr || canvas.height !== h * dpr) {
+                canvas.width = w * dpr;
+                canvas.height = h * dpr;
+            }
+            ctx.resetTransform();
+            ctx.scale(dpr, dpr);
+            ctx.clearRect(0, 0, w, h);
+
+            const cx = w / 2;
+            const cy = h / 2;
+            const r = w / 2 - 2;
+
+            // 1. Dial Face: White for Day, Black for Night
+            ctx.beginPath();
+            ctx.arc(cx, cy, r, 0, 2 * Math.PI);
+            ctx.fillStyle = isDay ? '#ffffff' : '#000000';
+            ctx.fill();
+
+            // 2. Bezel Ring
+            ctx.lineWidth = 1.5;
+            ctx.strokeStyle = isDay ? '#cbd5e1' : '#2f323a';
+            ctx.stroke();
+
+            // 3. Numbers 1 to 12
+            ctx.font = '600 9px -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, sans-serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillStyle = isDay ? '#000000' : '#ffffff';
+
+            const numRadius = r - 10.5;
+            for (let num = 1; num <= 12; num++) {
+                const angle = (num * Math.PI) / 6 - Math.PI / 2;
+                const nx = cx + Math.cos(angle) * numRadius;
+                const ny = cy + Math.sin(angle) * numRadius;
+                ctx.fillText(num.toString(), nx, ny);
+            }
+
+            // 4. Time components
             const hours = date.getHours() % 12;
             const minutes = date.getMinutes();
             const seconds = date.getSeconds() + date.getMilliseconds() / 1000;
 
-            // 3. Hour Hand
+            // 5. Hour hand (bold, clean)
             const hourAngle = (hours + minutes / 60) * (Math.PI / 6) - Math.PI / 2;
+            ctx.save();
             ctx.beginPath();
-            ctx.lineWidth = 4;
-            ctx.strokeStyle = '#0f172a';
-            ctx.moveTo(0, 0);
-            ctx.lineTo(Math.cos(hourAngle) * (r * 0.48), Math.sin(hourAngle) * (r * 0.48));
+            ctx.lineWidth = 3.2;
+            ctx.lineCap = 'round';
+            ctx.strokeStyle = isDay ? '#000000' : '#ffffff';
+            ctx.moveTo(cx, cy);
+            ctx.lineTo(cx + Math.cos(hourAngle) * (r * 0.48), cy + Math.sin(hourAngle) * (r * 0.48));
             ctx.stroke();
+            ctx.restore();
 
-            // 4. Minute Hand
+            // 6. Minute hand (longer)
             const minAngle = (minutes + seconds / 60) * (Math.PI / 30) - Math.PI / 2;
+            ctx.save();
             ctx.beginPath();
-            ctx.lineWidth = 2.8;
-            ctx.strokeStyle = '#1e293b';
-            ctx.moveTo(0, 0);
-            ctx.lineTo(Math.cos(minAngle) * (r * 0.72), Math.sin(minAngle) * (r * 0.72));
+            ctx.lineWidth = 2.2;
+            ctx.lineCap = 'round';
+            ctx.strokeStyle = isDay ? '#000000' : '#ffffff';
+            ctx.moveTo(cx, cy);
+            ctx.lineTo(cx + Math.cos(minAngle) * (r * 0.70), cy + Math.sin(minAngle) * (r * 0.70));
             ctx.stroke();
+            ctx.restore();
 
-            // 5. Second Hand (Vibrant Red)
+            // 7. Second hand (Orange accent hand matching reference image)
             const secAngle = seconds * (Math.PI / 30) - Math.PI / 2;
+            ctx.save();
             ctx.beginPath();
-            ctx.lineWidth = 1.6;
-            ctx.strokeStyle = '#dc2626';
-            ctx.moveTo(0, 0);
-            ctx.lineTo(Math.cos(secAngle) * (r * 0.8), Math.sin(secAngle) * (r * 0.8));
+            ctx.lineWidth = 1.3;
+            ctx.strokeStyle = '#ff9500';
+            ctx.moveTo(cx - Math.cos(secAngle) * (r * 0.16), cy - Math.sin(secAngle) * (r * 0.16));
+            ctx.lineTo(cx + Math.cos(secAngle) * (r * 0.82), cy + Math.sin(secAngle) * (r * 0.82));
             ctx.stroke();
 
-            // 6. Center Hub
+            // Center hub
             ctx.beginPath();
-            ctx.arc(0, 0, 3, 0, 2 * Math.PI);
-            ctx.fillStyle = '#dc2626';
+            ctx.arc(cx, cy, 2.5, 0, 2 * Math.PI);
+            ctx.fillStyle = '#ff9500';
             ctx.fill();
-
             ctx.restore();
         }
 
-        // High-Detail World Map Drawing with Realistic Shorelines (24timezones style)
+        // High-Detail World Map Drawing with Realistic Shorelines (Refined Dark Aesthetic)
         function drawDayNightWorldMap() {
             const canvas = document.getElementById('world-map-canvas');
             if (!canvas) return;
@@ -1441,24 +1839,14 @@
             ctx.scale(dpr, dpr);
             ctx.clearRect(0, 0, width, height);
 
-            // 1. Daylight Vivid Ocean Base
-            const oceanGradient = ctx.createLinearGradient(0, 0, 0, height);
-            if (currentTheme === 'dark') {
-                oceanGradient.addColorStop(0, '#243a57');
-                oceanGradient.addColorStop(0.5, '#355074');
-                oceanGradient.addColorStop(1, '#1f3049');
-            } else {
-                oceanGradient.addColorStop(0, '#70b2fb');
-                oceanGradient.addColorStop(0.5, '#93c5fd');
-                oceanGradient.addColorStop(1, '#60a5fa');
-            }
-            ctx.fillStyle = oceanGradient;
+            // 1. Pitch Black Ocean Base (matching reference image)
+            ctx.fillStyle = '#000000';
             ctx.fillRect(0, 0, width, height);
 
             // 2. Graticule Lines (Latitude & Longitude)
-            ctx.strokeStyle = 'rgba(255, 255, 255, 0.09)';
-            ctx.lineWidth = 0.7;
-            for (let lon = 0; lon <= 360; lon += 30) {
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
+            ctx.lineWidth = 0.75;
+            for (let lon = 0; lon <= 360; lon += 15) {
                 const x = (lon / 360) * width;
                 ctx.beginPath();
                 ctx.moveTo(x, 0);
@@ -1481,14 +1869,13 @@
             const utcHours = now.getUTCHours() + now.getUTCMinutes() / 60 + now.getUTCSeconds() / 3600;
             const sunLon = (12 - utcHours) * 15;
             
-            const startOfYear = new Date(now.getFullYear(), 0, 0);
+            const startOfYear = new Date(Date.UTC(now.getUTCFullYear(), 0, 0));
             const dayOfYear = Math.floor((now - startOfYear) / (1000 * 60 * 60 * 24));
             const sunDeclination = -23.44 * Math.cos((2 * Math.PI / 365) * (dayOfYear + 10)) * (Math.PI / 180);
 
-            // 5. Draw Night Shade Overlay
-            ctx.beginPath();
-            const numSteps = 120;
-            const nightPath = [];
+            // 5. Build Solar Terminator Path
+            const numSteps = 180;
+            const terminatorCurve = [];
 
             for (let i = 0; i <= numSteps; i++) {
                 const x = (i / numSteps) * width;
@@ -1500,54 +1887,49 @@
                 lat = Math.max(-85, Math.min(85, lat));
 
                 const y = height * (0.5 - lat / 180);
-                nightPath.push({ x, y });
-                if (i === 0) ctx.moveTo(x, y);
-                else ctx.lineTo(x, y);
+                terminatorCurve.push({ x, y });
             }
 
-            if (sunDeclination > 0) {
-                ctx.lineTo(width, height);
-                ctx.lineTo(0, height);
-            } else {
-                ctx.lineTo(width, 0);
-                ctx.lineTo(0, 0);
-            }
-            ctx.closePath();
-
-            const nightGradient = ctx.createLinearGradient(0, 0, 0, height);
-            nightGradient.addColorStop(0, 'rgba(6, 10, 25, 0.77)');
-            nightGradient.addColorStop(0.5, 'rgba(8, 14, 34, 0.73)');
-            nightGradient.addColorStop(1, 'rgba(5, 9, 22, 0.79)');
-            ctx.fillStyle = nightGradient;
-            ctx.fill();
-
-            // Golden Twilight Boundary Line
+            // 6. Draw Daylight Illumination Area
+            ctx.save();
             ctx.beginPath();
-            nightPath.forEach((pt, idx) => {
+            terminatorCurve.forEach((pt, idx) => {
                 if (idx === 0) ctx.moveTo(pt.x, pt.y);
                 else ctx.lineTo(pt.x, pt.y);
             });
-            ctx.strokeStyle = 'rgba(251, 191, 36, 0.65)';
-            ctx.lineWidth = 1.8;
-            ctx.stroke();
 
-            // Sun Light Center Glow
-            const sunX = ((sunLon + 180) % 360) / 360 * width;
-            const sunY = height * (0.5 - (sunDeclination * 180 / Math.PI) / 180);
-            const sunRadial = ctx.createRadialGradient(sunX, sunY, 0, sunX, sunY, 80);
-            sunRadial.addColorStop(0, 'rgba(254, 240, 138, 0.45)');
-            sunRadial.addColorStop(1, 'rgba(254, 240, 138, 0)');
-            ctx.fillStyle = sunRadial;
-            ctx.beginPath();
-            ctx.arc(sunX, sunY, 80, 0, 2 * Math.PI);
+            if (sunDeclination > 0) {
+                ctx.lineTo(width, 0);
+                ctx.lineTo(0, 0);
+            } else {
+                ctx.lineTo(width, height);
+                ctx.lineTo(0, height);
+            }
+            ctx.closePath();
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.07)';
             ctx.fill();
+            ctx.restore();
+
+            // 7. Glowing White Boundary Curve (terminator line)
+            ctx.save();
+            ctx.beginPath();
+            terminatorCurve.forEach((pt, idx) => {
+                if (idx === 0) ctx.moveTo(pt.x, pt.y);
+                else ctx.lineTo(pt.x, pt.y);
+            });
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.88)';
+            ctx.lineWidth = 1.6;
+            ctx.shadowColor = 'rgba(255, 255, 255, 0.7)';
+            ctx.shadowBlur = 6;
+            ctx.stroke();
+            ctx.restore();
         }
 
-        // Highly Detailed Realistic Shorelines (24timezones style)
+        // Highly Detailed Realistic Shorelines (Refined Dark Aesthetic)
         function drawRealisticContinents(ctx, w, h) {
-            ctx.fillStyle = currentTheme === 'dark' ? '#3c5a42' : '#86efac';
-            ctx.strokeStyle = currentTheme === 'dark' ? 'rgba(255,255,255,0.22)' : 'rgba(0,0,0,0.18)';
-            ctx.lineWidth = 1.1;
+            ctx.fillStyle = '#26282e';
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
+            ctx.lineWidth = 1.0;
 
             function drawPath(coords) {
                 ctx.beginPath();
@@ -1662,34 +2044,50 @@
             drawDayNightWorldMap();
 
             const now = new Date();
-            MARKET_CENTERS.forEach(city => {
+            const tokyoDate = new Date(now.toLocaleString("en-US", { timeZone: "Asia/Tokyo" }));
+
+            REFINED_WORLD_CITIES.forEach(city => {
                 const cityDate = new Date(now.toLocaleString("en-US", { timeZone: city.zone }));
-                const clockCanvas = document.getElementById(`analog-${city.id}`);
-                drawAnalogClock(clockCanvas, cityDate);
+                const hours = cityDate.getHours();
+                const minutes = cityDate.getMinutes();
+                const timeStr = `${hours}:${String(minutes).padStart(2, '0')}`;
 
-                const timeEl = document.getElementById(`time-${city.id}`);
-                const badgeEl = document.getElementById(`badge-${city.id}`);
-                const schedBadgeEl = document.getElementById(`sched-badge-${city.id}`);
+                // 1. Update Map marker digital time
+                const mapTimeEl = document.getElementById(`map-time-${city.id}`);
+                if (mapTimeEl) mapTimeEl.textContent = timeStr;
 
-                const timeStr = cityDate.toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
-                if (timeEl) timeEl.textContent = timeStr;
+                // 2. Solar sunrise / sunset calculation
+                const sun = getCitySunTimes(city.lat, city.lon, city.tzOffset);
+                const cityMin = hours * 60 + minutes;
+                const isDay = (cityMin >= sun.sunriseMin && cityMin < sun.sunsetMin);
 
-                const day = cityDate.getDay();
-                const decimalHour = cityDate.getHours() + cityDate.getMinutes() / 60;
-                const isWeekday = (day >= 1 && day <= 5);
-                const isOpen = isWeekday && (decimalHour >= city.openH && decimalHour < city.closeH);
-
-                const badgeText = isOpen ? "OPEN 🟢" : "CLOSED ⚪";
-                const badgeClass = isOpen ? "market-badge open" : "market-badge closed";
-
-                if (badgeEl) {
-                    badgeEl.textContent = badgeText;
-                    badgeEl.className = badgeClass;
+                // 3. Draw Refined Analog Clock with Day/Night face
+                const cardCanvas = document.getElementById(`card-analog-${city.id}`);
+                if (cardCanvas) {
+                    drawRefinedClock(cardCanvas, cityDate, isDay);
                 }
-                if (schedBadgeEl) {
-                    schedBadgeEl.textContent = badgeText;
-                    schedBadgeEl.className = badgeClass;
+
+                // 4. Update Card Labels (matching reference image)
+                const titleEl = document.getElementById(`card-title-${city.id}`);
+                if (titleEl) titleEl.textContent = `${city.name}、${timeStr}`;
+
+                // Offset relative to Tokyo
+                const diffHours = Math.round((cityDate.getTime() - tokyoDate.getTime()) / (1000 * 60 * 60));
+                const offsetStr = diffHours >= 0 ? `+${diffHours}` : `${diffHours}`;
+                let dayWord = '今日';
+                if (cityDate.getDate() > tokyoDate.getDate() || (cityDate.getMonth() > tokyoDate.getMonth() && cityDate.getDate() === 1)) {
+                    dayWord = '明日';
+                } else if (cityDate.getDate() < tokyoDate.getDate() || cityDate.getMonth() < tokyoDate.getMonth()) {
+                    dayWord = '昨日';
                 }
+                const offsetEl = document.getElementById(`card-offset-${city.id}`);
+                if (offsetEl) offsetEl.textContent = `${dayWord}、${offsetStr} 時間`;
+
+                const srEl = document.getElementById(`card-sunrise-${city.id}`);
+                if (srEl) srEl.textContent = `日の出: ${sun.sunriseStr}`;
+
+                const ssEl = document.getElementById(`card-sunset-${city.id}`);
+                if (ssEl) ssEl.textContent = `日の入: ${sun.sunsetStr}`;
             });
 
             worldClockAnimFrame = requestAnimationFrame(updateWorldClockLoop);
@@ -1704,9 +2102,28 @@
             
             const modal = document.getElementById('chart-modal');
             const container = document.getElementById('tv-chart-container');
+            const preipoBanner = document.getElementById('modal-preipo-banner');
             
             updateModalHeader(item);
             container.innerHTML = '';
+
+            if (item.isPreIPO) {
+                preipoBanner.style.display = 'flex';
+                preipoBanner.className = 'modal-banner-preipo';
+                preipoBanner.innerHTML = `
+                    <div class="banner-text">
+                        <span>🚀</span>
+                        <span><strong>Anthropic</strong>は未上場（プレIPO）企業です。セカンダリー市場推定気配値（約$38.50）をベースに算出。XMのMT5口座にて24時間取引可能です。</span>
+                    </div>
+                    <a href="https://www.xmtrading.com/referral?token=4N8ztpRVYoPFN4mkOwtT_w" target="_blank" rel="noopener noreferrer" class="banner-btn">
+                        XM MT5で24時間取引 ↗
+                    </a>
+                `;
+            } else {
+                preipoBanner.style.display = 'none';
+                preipoBanner.innerHTML = '';
+            }
+
             modal.classList.add('active');
 
             const tvSymbol = item.tv_symbol || item.symbol;
@@ -1745,6 +2162,11 @@
         function closeChartModal() {
             const modal = document.getElementById('chart-modal');
             const container = document.getElementById('tv-chart-container');
+            const preipoBanner = document.getElementById('modal-preipo-banner');
+            if (preipoBanner) {
+                preipoBanner.style.display = 'none';
+                preipoBanner.innerHTML = '';
+            }
             modal.classList.remove('active');
             container.innerHTML = '';
             activeModalSymbol = null;
